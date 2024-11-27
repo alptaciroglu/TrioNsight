@@ -15,7 +15,7 @@ conda activate trionsight
 ```
 git clone git@github.com:wlin16/VariPred.git
 cd VariPred
-pip install -r varipred_requirements.txt
+pip install -r ../varipred_requirements.txt
 pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1 --index-url https://download.pytorch.org/whl/cu118
 pip install fair-esm
 ```
