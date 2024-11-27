@@ -9,7 +9,7 @@ cd TrioNsight
 conda env create -f environment.yml
 conda activate trionsight
 ```
-## Step 1.1: Include VariPred installation
+## Step 1.1: VariPred
 ***Not mandatory if you'd like to use precalculated VariPred output used in the training of the TrioNsight -> Go to Step 1.2***
 ***If you need to use VariPred, continue directly from below***
 ```
@@ -19,7 +19,7 @@ pip install -r requirements.txt
 pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1 --index-url https://download.pytorch.org/whl/cu118
 pip install fair-esm
 ```
-## Step 1.2: Install necessary R libraries
+## Step 1.2: Necessary R libraries
 ```
 R
 source('Scripts/helper.R')
