@@ -6,7 +6,7 @@ Codes and results for TrioNsight - TrioN-like Dbl-homology domain specific varia
 git clone git@github.com:alptaciroglu/TrioNsight.git
 cd TrioNsight
 
-conda env create -f environment.yml
+conda env create -f VariPred_files/environment.yml
 conda activate trionsight
 ```
 ## Step 1.1: VariPred
@@ -18,6 +18,11 @@ cd VariPred
 pip install -r requirements.txt
 pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1 --index-url https://download.pytorch.org/whl/cu118
 pip install fair-esm
+
+cd ../
+cp -f VariPred_files/predict.sh VariPred/VariPred/predict.sh
+cp -f VariPred_files/main.py VariPred/VariPred/main.py
+
 ```
 ## Step 1.2: Necessary R libraries
 ```
