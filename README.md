@@ -15,6 +15,7 @@ conda activate trionsight
 ***Not mandatory if you'd like to use precalculated VariPred output used in the training of the TrioNsight -> Go to Step 1.2***
 ***If you need to run VariPred yourself, continue directly from below***
 
+https://github.com/wlin16/VariPred
 ```
 git clone https://github.com/wlin16/VariPred.git
 cd VariPred
@@ -33,11 +34,10 @@ cp -f VariPred_files/main.py VariPred/VariPred/main.py
 ## Step 1.2: SAAPdap
 ***Not mandatory if you'd like to use precalculated SAAPdap output used in the training of the TrioNsight -> Go to Step 1.3***
 ***If you need to run SAAPdap yourself, continue directly from below***
+https://github.com/ACRMGroup/SAAP3
 
 Please go to SAAP3 repository and follow the installation instructions.
 SAAPdap should be installed under TrioNsight/StructureAnalysis or modify the paths under TrioNsight/Scripts/SAAPdap.R wrapper function based on SAAPdap installation directory.
-
-https://github.com/ACRMGroup/SAAP3
 
 ## Step 1.3: Necessary R libraries
 
