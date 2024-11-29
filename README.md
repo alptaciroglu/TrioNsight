@@ -20,8 +20,10 @@ pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1 --index-url https
 pip install fair-esm
 
 cd ../
-cp -f VariPred_files/predict.sh VariPred/VariPred/predict.sh # File contains adjusted paths only
-cp -f VariPred_files/main.py VariPred/VariPred/main.py # File contains adjusted paths only
+cp -f VariPred_files/predict.sh VariPred/VariPred/predict.sh
+# File contains adjusted paths only
+cp -f VariPred_files/main.py VariPred/VariPred/main.py
+# File contains adjusted paths only
 
 ```
 ## Step 1.2: Necessary R libraries
