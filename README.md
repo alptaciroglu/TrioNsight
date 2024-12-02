@@ -38,7 +38,7 @@ cp -f VariPred_files/main.py VariPred/VariPred/main.py
 https://github.com/ACRMGroup/SAAP3
 
 Please go to SAAP3 repository and follow the installation instructions.
-SAAPdap should be installed under TrioNsight/structure_analysis/ or modify the paths under TrioNsight/scripts/SAAPdap.R wrapper function based on SAAPdap installation directory.
+SAAPdap should be installed under TrioNsight/structure_analysis/. Alternatively, modify the paths under TrioNsight/scripts/SAAPdap.R wrapper function based on chosen SAAPdap installation directory.
 
 ## Step 1.3: Necessary R libraries
 
