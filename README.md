@@ -44,7 +44,7 @@ SAAPdap should be installed under TrioNsight/StructureAnalysis or modify the pat
 
 ```
 R
-source('Scripts/helper.R')
+source('scripts/helper.R')
 ```
 
 ## Step 2: Run TrioNsight
