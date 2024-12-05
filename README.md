@@ -8,7 +8,7 @@
 
 **TrioNsight** - TrioN-like Dbl-homology domain specific variant effect predictor
 
-### 📝 Step 1: Installation
+## 📝 Step 1: Installation
 
 ```
 git clone git@github.com:alptaciroglu/TrioNsight.git
