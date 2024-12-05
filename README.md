@@ -23,7 +23,7 @@ source('scripts/helper.R')
 
 ### Installation VariPred
 
-***Not mandatory if you'd like to use precalculated VariPred output used in the training of the TrioNsight -> Go to Step 1.3 [here](#-installation-saapdap) ***
+***Not mandatory if you'd like to use precalculated VariPred output used in the training of the TrioNsight -> Go to [Installation SAAPdap](#-installation-saapdap) ***
 
 ***If you need to run VariPred yourself, continue with VariPred installation directly below***
 
@@ -45,7 +45,7 @@ cp -f VariPred_files/main.py VariPred/VariPred/main.py
 
 ### Installation SAAPdap
 
-***Not mandatory if you'd like to use precalculated SAAPdap output used in the training of the TrioNsight -> Go to Run TrioNsight [here](#-run-trionsight) ***
+***Not mandatory if you'd like to use precalculated SAAPdap output used in the training of the TrioNsight -> Go to Run TrioNsight [Run TrioNsight](#-run-trionsight) ***
 
 ***If you need to run SAAPdap yourself, continue with SAAPdap installation directly below***
 
@@ -56,4 +56,4 @@ SAAPdap should be installed under TrioNsight/structure_analysis/. Alternatively,
 
 
 
-### Step 2: Run TrioNsight
+### Run TrioNsight
