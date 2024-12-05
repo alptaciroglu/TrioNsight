@@ -1,14 +1,20 @@
-## TrioNsight
+# TrioNsight
 
 ## Table of Contents
 - [About](#-about)
+- [Installation](#-Installation)
+  - [Base](#base)
+  - [VariPred](#varipred)
+  - [SAAPdap](#saapdap)
 - [Installation](#-Installation)
 
 ## 🚀 About
 
 **TrioNsight** - TrioN-like Dbl-homology domain specific variant effect predictor
 
-## 📝 Installation Base
+## 📝 Installation 
+
+### Base
 
 ```
 git clone git@github.com:alptaciroglu/TrioNsight.git
@@ -21,9 +27,9 @@ R
 source('scripts/helper.R')
 ```
 
-### Installation VariPred
+### VariPred
 
-***Not mandatory if you'd like to use precalculated VariPred output used in the training of the TrioNsight -> Go to [Installation SAAPdap](#-installation-saapdap) ***
+***Not mandatory if you'd like to use precalculated VariPred output used in the training of the TrioNsight -> Go to [SAAPdap](#saapdap) ***
 
 ***If you need to run VariPred yourself, continue with VariPred installation directly below***
 
@@ -43,9 +49,9 @@ cp -f VariPred_files/main.py VariPred/VariPred/main.py
 
 ```
 
-### Installation SAAPdap
+### SAAPdap
 
-***Not mandatory if you'd like to use precalculated SAAPdap output used in the training of the TrioNsight -> Go to Run TrioNsight [Run TrioNsight](#-run-trionsight) ***
+***Not mandatory if you'd like to use precalculated SAAPdap output used in the training of the TrioNsight -> Go to Run TrioNsight [Run TrioNsight](#run-trionsight) ***
 
 ***If you need to run SAAPdap yourself, continue with SAAPdap installation directly below***
 
@@ -56,4 +62,4 @@ SAAPdap should be installed under TrioNsight/structure_analysis/. Alternatively,
 
 
 
-### Run TrioNsight
+## Run TrioNsight
