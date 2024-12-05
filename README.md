@@ -1,7 +1,14 @@
 ## TrioNsight
-Codes and results for TrioNsight - TrioN-like Dbl-homology domain specific variant effect predictor
 
-###Step 1: Installation
+## Table of Contents
+- [About](#-about)
+- [Installation](#-step-1)
+
+## 🚀 About
+
+**TrioNsight** - TrioN-like Dbl-homology domain specific variant effect predictor
+
+### 📝 Step 1: Installation
 
 ```
 git clone git@github.com:alptaciroglu/TrioNsight.git
