@@ -14,7 +14,7 @@
 
 ## 📝 Installation 
 
-### Base
+### <ins>Base</ins>
 
 ```
 git clone git@github.com:alptaciroglu/TrioNsight.git
@@ -27,7 +27,7 @@ R
 source('scripts/helper.R')
 ```
 
-### VariPred
+### <ins>VariPred</ins>
 
 ***Not mandatory if you'd like to use precalculated VariPred output used in the training of the TrioNsight -> Go to [SAAPdap](#saapdap)***
 
@@ -49,7 +49,7 @@ cp -f VariPred_files/main.py VariPred/VariPred/main.py
 
 ```
 
-### SAAPdap
+### <ins>SAAPdap</ins>
 
 ***Not mandatory if you'd like to use precalculated SAAPdap output used in the training of the TrioNsight -> Go to Run TrioNsight [Run TrioNsight](#run-trionsight)***
 
@@ -62,4 +62,4 @@ SAAPdap should be installed under TrioNsight/structure_analysis/. Alternatively,
 
 
 
-## Run TrioNsight
+## <ins>Run TrioNsight</ins>
