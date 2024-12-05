@@ -2,31 +2,28 @@
 
 ## Table of Contents
 - [About](#-about)
-- [Installation](#-step-1:-installation)
+- [Installation](#-Installation)
 
 ## 🚀 About
 
 **TrioNsight** - TrioN-like Dbl-homology domain specific variant effect predictor
 
-## 📝 Step 1: Installation
+## 📝 Installation Base
 
 ```
 git clone git@github.com:alptaciroglu/TrioNsight.git
 cd TrioNsight
 
-conda env create -f VariPred_files/environment.yml
+conda env create -f environment.yml
 conda activate trionsight
-```
-### Step 1.1: Necessary R libraries
 
-```
 R
 source('scripts/helper.R')
 ```
 
-### Step 1.2: VariPred
+### Installation VariPred
 
-***Not mandatory if you'd like to use precalculated VariPred output used in the training of the TrioNsight -> Go to Step 1.3 [here](#step-1.3) ***
+***Not mandatory if you'd like to use precalculated VariPred output used in the training of the TrioNsight -> Go to Step 1.3 [here](#-installation-saapdap) ***
 
 ***If you need to run VariPred yourself, continue with VariPred installation directly below***
 
@@ -46,9 +43,9 @@ cp -f VariPred_files/main.py VariPred/VariPred/main.py
 
 ```
 
-### Step 1.3: SAAPdap
+### Installation SAAPdap
 
-***Not mandatory if you'd like to use precalculated SAAPdap output used in the training of the TrioNsight -> Go to Step 2***
+***Not mandatory if you'd like to use precalculated SAAPdap output used in the training of the TrioNsight -> Go to Run TrioNsight [here](#-run-trionsight) ***
 
 ***If you need to run SAAPdap yourself, continue with SAAPdap installation directly below***
 
