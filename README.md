@@ -1,7 +1,7 @@
 ## TrioNsight
 Codes and results for TrioNsight - TrioN-like Dbl-homology domain specific variant effect predictor
 
-### Step 1: Installation
+###Step 1: Installation
 
 ```
 git clone git@github.com:alptaciroglu/TrioNsight.git
@@ -19,7 +19,7 @@ source('scripts/helper.R')
 
 ### Step 1.2: VariPred
 
-***Not mandatory if you'd like to use precalculated VariPred output used in the training of the TrioNsight -> Go to Step 1.3***
+***Not mandatory if you'd like to use precalculated VariPred output used in the training of the TrioNsight -> Go to Step 1.3 [here](#step-1.3) ***
 
 ***If you need to run VariPred yourself, continue with VariPred installation directly below***
 
