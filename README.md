@@ -6,7 +6,7 @@
   - [Base](#base)
   - [VariPred](#varipred)
   - [SAAPdap](#saapdap)
-- [Installation](#-Installation)
+- [Run TrioNsight](#-run-trionsight)
 
 ## 🚀 About
 
