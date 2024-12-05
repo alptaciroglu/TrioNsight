@@ -2,7 +2,7 @@
 
 ## Table of Contents
 - [About](#-about)
-- [Installation](#-step-1)
+- [Installation](#-step-1:-installation)
 
 ## 🚀 About
 
