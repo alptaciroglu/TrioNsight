@@ -15,11 +15,11 @@
 </p>
       
 <p align="center">
-  <a href="#-Installation">Installation</a> •
-  <a href="#base">Base</a> •
-  <a href="#varipred">VariPred</a> •
-  <a href="#saapdap">SAAPdap</a> •
-  <a href="#r-packages">R Packages</a> •
+  <a href="#-installation">Installation</a> •
+    <a href="#base-installation">Base</a> •
+    <a href="#varipred-installation">VariPred</a> •
+    <a href="#saapdap-installation">SAAPdap</a> •
+    <a href="#r-packages-installation">R Packages</a> •
   <a href="#-run-trionsight">Run TrioNsight</a> •
 </p>
 
