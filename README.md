@@ -7,10 +7,10 @@
     <img src="https://img.shields.io/github/last-commit/alptaciroglu/TrioNsight.svg?style=flat-square&logo=github&logoColor=white"
          alt="GitHub last commit">
     <a href="https://github.com/alptaciroglu/TrioNsight/issues">
-    <img src="https://img.shields.io/github/issues-raw/alptaciroglu/trionsight.svg?style=flat-square&logo=github&logoColor=white"
+    <img src="https://img.shields.io/github/issues-raw/alptaciroglu/TrioNsight.svg?style=flat-square&logo=github&logoColor=white"
          alt="GitHub issues">
     <a href="https://github.com/alptaciroglu/TrioNsight/pulls">
-    <img src="https://img.shields.io/github/issues-pr-raw/alptaciroglu/trionsight.svg?style=flat-square&logo=github&logoColor=white"
+    <img src="https://img.shields.io/github/issues-pr-raw/alptaciroglu/TrioNsight.svg?style=flat-square&logo=github&logoColor=white"
          alt="GitHub pull requests">
 </p>
       
