@@ -1,17 +1,56 @@
 # TrioNsight
 
+<h4 align="center">A specialised variant effect predictor for TrioN-like Dbl-homology domains.</h4>
+
+<p align="center">
+    <a href="https://github.com/alptaciroglu/TrioNsight/commits/master">
+    <img src="https://img.shields.io/github/last-commit/alptaciroglu/trionsight.svg?style=flat-square&logo=github&logoColor=white"
+         alt="GitHub last commit">
+    <a href="https://github.com/alptaciroglu/TrioNsight/issues">
+    <img src="https://img.shields.io/github/issues-raw/alptaciroglu/trionsight.svg?style=flat-square&logo=github&logoColor=white"
+         alt="GitHub issues">
+    <a href="https://github.com/alptaciroglu/TrioNsight/pulls">
+    <img src="https://img.shields.io/github/issues-pr-raw/alptaciroglu/trionsight.svg?style=flat-square&logo=github&logoColor=white"
+         alt="GitHub pull requests">
+</p>
+      
+<p align="center">
+  <a href="#-Installation">Installation</a> •
+  <a href="#base">Base</a> •
+  <a href="#varipred">VariPred</a> •
+  <a href="#saapdap">SAAPdap</a> •
+  <a href="#r-packages">R Packages</a> •
+  <a href="#-run-trionsight">Run TrioNsight</a> •
+</p>
+
+---
+
+<table>
+<tr>
+<td>
+  
+**TrioNsight** is a variant effect predictor trained on TrioN-like DH domains - N-terminal Dbl-homology domain of TRIO (TrioN) and Dbl-homology domains that are highly similar to TrioN.
+
+
+
+Each and every one of the commands provided are **finely tuned**, enabling the game's full potential compared to default settings.
+
+![ArminC AutoExec Code](https://raw.githubusercontent.com/alptaciroglu/TrioNsight/master/workflow.png)
+<p align="right">
+<sub>(Preview)</sub>
+</p>
+
+</td>
+</tr>
+</table>
+
 ## Table of Contents
-- [About](#-about)
 - [Installation](#-Installation)
   - [Base](#base)
   - [VariPred](#varipred)
   - [SAAPdap](#saapdap)
   - [R packages](#r-packages)
 - [Run TrioNsight](#-run-trionsight)
-
-## About
-
-**TrioNsight** - TrioN-like Dbl-homology domain specific variant effect predictor
 
 ## ⚙️ Installation 
 
