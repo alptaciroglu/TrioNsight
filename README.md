@@ -15,12 +15,12 @@
 </p>
       
 <p align="center">
-  <a href="#-installation">Installation</a> •
-    <a href="#base-installation">Base</a> •
-    <a href="#varipred-installation">VariPred</a> •
-    <a href="#saapdap-installation">SAAPdap</a> •
-    <a href="#r-packages-installation">R Packages</a> •
-  <a href="#-run-trionsight">Run TrioNsight</a> •
+  <a href="#1)-installation">1) Installation</a> •
+    <a href="#1.1)-base">1.1) Base</a> •
+    <a href="#1.2)-varipred">1.2) VariPred</a> •
+    <a href="#1.3)-saapdap">1.3) SAAPdap</a> •
+    <a href="#1.4)-r-packages">1.4) R Packages</a> •
+  <a href="#2)-run-trionsight">Run TrioNsight</a> •
 </p>
 
 ---
@@ -41,17 +41,9 @@
 </tr>
 </table>
 
-## Table of Contents
-- [Installation](#-Installation)
-  - [Base](#base)
-  - [VariPred](#varipred)
-  - [SAAPdap](#saapdap)
-  - [R packages](#r-packages)
-- [Run TrioNsight](#-run-trionsight)
+##⚙️1) Installation 
 
-## ⚙️ Installation 
-
-### <ins>Base</ins>
+### <ins>1.1) Base</ins>
 
 ```
 git clone git@github.com:alptaciroglu/TrioNsight.git
@@ -61,7 +53,7 @@ conda env create -f environment.yml
 conda activate trionsight
 ```
 
-### <ins>VariPred</ins>
+### <ins>1.2) VariPred</ins>
 
 For the VariPred repo please visit https://github.com/wlin16/VariPred
 
@@ -84,7 +76,7 @@ cp -f VariPred_files/main.py VariPred/VariPred/main.py
 # File contains adjusted paths only
 ```
 
-### <ins>SAAPdap</ins>
+### <ins>1.3) SAAPdap</ins>
 
 > [!NOTE]  
 > Not mandatory if you'd like to use precalculated SAAPdap output used in the training of the TrioNsight -> Go to Run TrioNsight [Run TrioNsight](#run-trionsight)
@@ -96,11 +88,11 @@ https://github.com/ACRMGroup/SAAP3
 Please go to SAAP3 repository and follow the installation instructions.
 SAAPdap should be installed under TrioNsight/structure_analysis/. Alternatively, modify the paths under TrioNsight/scripts/SAAPdap.R wrapper function based on chosen SAAPdap installation directory.
 
-### <ins>R packages</ins>
+### <ins>1.4) R packages</ins>
 
 ```
 R
 source('scripts/helper.R')
 ```
 
-## 🚀 Run TrioNsight
+##🚀2) Run TrioNsight
