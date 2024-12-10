@@ -29,9 +29,9 @@ conda activate trionsight
 
 For the VariPred repo please visit https://github.com/wlin16/VariPred
 
-***Not mandatory if you'd like to use precalculated VariPred output used in the training of the TrioNsight -> Go to [SAAPdap](#saapdap)***
-
-***If you need to run VariPred yourself, continue with VariPred installation directly below***
+> [!NOTE]  
+> Not mandatory if you'd like to use precalculated VariPred output used in the training of the TrioNsight -> Go to [SAAPdap](#saapdap)
+> If you need to run VariPred yourself, continue with VariPred installation directly below
 
 ```
 git clone https://github.com/wlin16/VariPred.git
