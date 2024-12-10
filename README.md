@@ -4,7 +4,7 @@
 
 <p align="center">
     <a href="https://github.com/alptaciroglu/TrioNsight/commits/master">
-    <img src="https://img.shields.io/github/last-commit/alptaciroglu/trionsight.svg?style=flat-square&logo=github&logoColor=white"
+    <img src="https://img.shields.io/github/last-commit/alptaciroglu/TrioNsight.svg?style=flat-square&logo=github&logoColor=white"
          alt="GitHub last commit">
     <a href="https://github.com/alptaciroglu/TrioNsight/issues">
     <img src="https://img.shields.io/github/issues-raw/alptaciroglu/trionsight.svg?style=flat-square&logo=github&logoColor=white"
