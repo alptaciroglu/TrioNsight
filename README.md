@@ -14,9 +14,8 @@
 <p align="center">
   <a href="#-installation">🔧 Installation</a>
   <a href="#-run-trionsight">🚀 Run TrioNsight</a>
-  <a href="#-input-data">📊 Input Data</a>
-  <a href="#-citing-this-work">❛❛❞ Citing this work</a>
   <a href="#-data-availability">✔ Data availability</a>
+  <a href="#-citing-this-work">❛❛❞ Citing this work</a>
   <a href="#-acknowledgement">🤝 Acknowledgement</a>
 </p>
 
@@ -94,10 +93,8 @@ source('scripts/helper.R')
 
 ## 🚀 Run TrioNsight
 
-## 📊 Input Data
+## ✔ Data availability
 
 ## ❛❛❞ Citing this work
-
-## ✔ Data availability
 
 ## 🤝 Acknowledgement
