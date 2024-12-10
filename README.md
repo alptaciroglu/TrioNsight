@@ -15,12 +15,12 @@
 </p>
       
 <p align="center">
-  <a href="#1)-installation">1) Installation</a> •
-    <a href="#1.1)-base">1.1) Base</a> •
-    <a href="#1.2)-varipred">1.2) VariPred</a> •
-    <a href="#1.3)-saapdap">1.3) SAAPdap</a> •
-    <a href="#1.4)-r-packages">1.4) R Packages</a> •
-  <a href="#2)-run-trionsight">Run TrioNsight</a> •
+  <a href="#-1)-installation">1) Installation</a> •
+    <a href="#11)-base">1.1) Base</a> •
+    <a href="#12)-varipred">1.2) VariPred</a> •
+    <a href="#13)-saapdap">1.3) SAAPdap</a> •
+    <a href="#14)-r-packages">1.4) R Packages</a> •
+  <a href="#-2)-run-trionsight">Run TrioNsight</a> •
 </p>
 
 ---
@@ -41,7 +41,7 @@
 </tr>
 </table>
 
-##⚙️1) Installation 
+## ⚙️1) Installation 
 
 ### <ins>1.1) Base</ins>
 
@@ -95,4 +95,4 @@ R
 source('scripts/helper.R')
 ```
 
-##🚀2) Run TrioNsight
+## 🚀2) Run TrioNsight
