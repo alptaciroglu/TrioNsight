@@ -7,7 +7,7 @@
   - [VariPred](#varipred)
   - [SAAPdap](#saapdap)
   - [R packages](#r-packages)
-- [Run TrioNsight](#run-trionsight)
+- [Run TrioNsight](#-run-trionsight)
 
 ## About
 
