@@ -9,11 +9,11 @@
   - [R packages](#r-packages)
 - [Run TrioNsight](#run-trionsight)
 
-## 🚀 About
+## About
 
 **TrioNsight** - TrioN-like Dbl-homology domain specific variant effect predictor
 
-## 📝 Installation 
+## ⚙️ Installation 
 
 ### <ins>Base</ins>
 
@@ -31,7 +31,7 @@ For the VariPred repo please visit https://github.com/wlin16/VariPred
 
 > [!NOTE]  
 > Not mandatory if you'd like to use precalculated VariPred output used in the training of the TrioNsight -> Go to [SAAPdap](#saapdap)
-
+>
 > If you need to run VariPred yourself, continue with VariPred installation directly below
 
 ```
@@ -52,7 +52,7 @@ cp -f VariPred_files/main.py VariPred/VariPred/main.py
 
 > [!NOTE]  
 > Not mandatory if you'd like to use precalculated SAAPdap output used in the training of the TrioNsight -> Go to Run TrioNsight [Run TrioNsight](#run-trionsight)
-
+>
 > If you need to run SAAPdap yourself, continue with SAAPdap installation directly below
 
 https://github.com/ACRMGroup/SAAP3
@@ -67,4 +67,4 @@ R
 source('scripts/helper.R')
 ```
 
-## <ins>Run TrioNsight</ins>
+## 🚀 Run TrioNsight
