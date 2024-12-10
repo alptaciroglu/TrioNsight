@@ -35,7 +35,7 @@
 
 Each and every one of the commands provided are **finely tuned**, enabling the game's full potential compared to default settings.
 
-![ArminC AutoExec Code](https://raw.githubusercontent.com/alptaciroglu/TrioNsight/master/workflow.png)
+![workflow](https://raw.githubusercontent.com/alptaciroglu/TrioNsight/master/workflow.png)
 <p align="right">
 <sub>(Preview)</sub>
 </p>
