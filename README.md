@@ -15,8 +15,8 @@
 </p>
       
 <p align="center">
-  <a href="#-1-installation">Installation</a> •
-  <a href="#-2-run-trionsight">Run TrioNsight</a> •
+  <a href="#-installation">Installation</a> •
+  <a href="#-run-trionsight">Run TrioNsight</a> •
 </p>
 
 ---
