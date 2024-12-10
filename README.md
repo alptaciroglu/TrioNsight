@@ -6,6 +6,7 @@
   - [Base](#base)
   - [VariPred](#varipred)
   - [SAAPdap](#saapdap)
+  - [R-packages](#rpackages)
 - [Run TrioNsight](#run-trionsight)
 
 ## 🚀 About
@@ -22,18 +23,16 @@ cd TrioNsight
 
 conda env create -f environment.yml
 conda activate trionsight
-
-R
-source('scripts/helper.R')
 ```
 
 ### <ins>VariPred</ins>
+
+For the VariPred repo please visit https://github.com/wlin16/VariPred
 
 ***Not mandatory if you'd like to use precalculated VariPred output used in the training of the TrioNsight -> Go to [SAAPdap](#saapdap)***
 
 ***If you need to run VariPred yourself, continue with VariPred installation directly below***
 
-https://github.com/wlin16/VariPred
 ```
 git clone https://github.com/wlin16/VariPred.git
 cd VariPred
@@ -46,7 +45,6 @@ cp -f VariPred_files/predict.sh VariPred/VariPred/predict.sh
 # File contains adjusted paths only
 cp -f VariPred_files/main.py VariPred/VariPred/main.py
 # File contains adjusted paths only
-
 ```
 
 ### <ins>SAAPdap</ins>
@@ -60,6 +58,11 @@ https://github.com/ACRMGroup/SAAP3
 Please go to SAAP3 repository and follow the installation instructions.
 SAAPdap should be installed under TrioNsight/structure_analysis/. Alternatively, modify the paths under TrioNsight/scripts/SAAPdap.R wrapper function based on chosen SAAPdap installation directory.
 
+### <ins>R-packages</ins>
 
+```
+R
+source('scripts/helper.R')
+```
 
 ## <ins>Run TrioNsight</ins>
