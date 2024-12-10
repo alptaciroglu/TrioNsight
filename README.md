@@ -75,12 +75,12 @@ cp -f VariPred_files/main.py VariPred/VariPred/main.py
 
 ### <ins>SAAPdap</ins>
 
+For the SAAPdap repo please visit https://github.com/ACRMGroup/SAAP3
+
 > [!NOTE]  
 > Not mandatory if you'd like to use precalculated SAAPdap output used in the training of the TrioNsight -> Go to Run TrioNsight [Run TrioNsight](#run-trionsight)
 >
 > If you need to run SAAPdap yourself, continue with SAAPdap installation directly below
-
-https://github.com/ACRMGroup/SAAP3
 
 Please go to SAAP3 repository and follow the installation instructions.
 SAAPdap should be installed under TrioNsight/structure_analysis/. Alternatively, modify the paths under TrioNsight/scripts/SAAPdap.R wrapper function based on chosen SAAPdap installation directory.
