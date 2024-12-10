@@ -32,10 +32,7 @@
 **TrioNsight** is a variant effect predictor trained on TrioN-like DH domains - N-terminal Dbl-homology domain of TRIO (TrioN) and Dbl-homology domains that are highly similar to TrioN.
 
 
-
-Each and every one of the commands provided are **finely tuned**, enabling the game's full potential compared to default settings.
-
-![workflow](https://raw.githubusercontent.com/alptaciroglu/TrioNsight/tree/main/workflow.png)
+![workflow](https://raw.githubusercontent.com/alptaciroglu/TrioNsight/blob/main/workflow.png)
 <p align="right">
 <sub>(Preview)</sub>
 </p>
