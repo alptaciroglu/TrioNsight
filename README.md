@@ -6,7 +6,7 @@
   - [Base](#base)
   - [VariPred](#varipred)
   - [SAAPdap](#saapdap)
-  - [R-packages](#rpackages)
+  - [R packages](#r-packages)
 - [Run TrioNsight](#run-trionsight)
 
 ## 🚀 About
@@ -58,7 +58,7 @@ https://github.com/ACRMGroup/SAAP3
 Please go to SAAP3 repository and follow the installation instructions.
 SAAPdap should be installed under TrioNsight/structure_analysis/. Alternatively, modify the paths under TrioNsight/scripts/SAAPdap.R wrapper function based on chosen SAAPdap installation directory.
 
-### <ins>R-packages</ins>
+### <ins>R packages</ins>
 
 ```
 R
