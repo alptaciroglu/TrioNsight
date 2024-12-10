@@ -31,6 +31,7 @@ For the VariPred repo please visit https://github.com/wlin16/VariPred
 
 > [!NOTE]  
 > Not mandatory if you'd like to use precalculated VariPred output used in the training of the TrioNsight -> Go to [SAAPdap](#saapdap)
+
 > If you need to run VariPred yourself, continue with VariPred installation directly below
 
 ```
@@ -49,9 +50,10 @@ cp -f VariPred_files/main.py VariPred/VariPred/main.py
 
 ### <ins>SAAPdap</ins>
 
-***Not mandatory if you'd like to use precalculated SAAPdap output used in the training of the TrioNsight -> Go to Run TrioNsight [Run TrioNsight](#run-trionsight)***
+> [!NOTE]  
+> Not mandatory if you'd like to use precalculated SAAPdap output used in the training of the TrioNsight -> Go to Run TrioNsight [Run TrioNsight](#run-trionsight)
 
-***If you need to run SAAPdap yourself, continue with SAAPdap installation directly below***
+> If you need to run SAAPdap yourself, continue with SAAPdap installation directly below
 
 https://github.com/ACRMGroup/SAAP3
 
