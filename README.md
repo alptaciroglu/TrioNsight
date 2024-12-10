@@ -41,7 +41,7 @@
 </tr>
 </table>
 
-## ⚙️1. Installation 
+## ⚙️ 1. Installation 
 
 ### <ins>1.1. Base</ins>
 
