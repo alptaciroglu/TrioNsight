@@ -24,10 +24,13 @@
 <table>
 <tr>
 <td>
-  
+
 **TrioNsight** is a variant effect predictor trained on TrioN-like DH domains - N-terminal Dbl-homology domain of TRIO (TrioN) and Dbl-homology domains that are highly similar to TrioN (13 Human DH domains in total).
+
 Data for all possible amino acid replacements are available - 50122 variant effect predictions from 13 TrioN-like DH domains (2638 residues in total).
+
 Installing and running TrioNsight is <ins>not required</ins> to obtain the data for all possible amino acid replacements. It can be found in "TrioNsight_predictions.txt" file located under the main branch.
+
 To reproduce the results, please continue with installing and running TrioNsight.
 
 ![workflow](workflow.png)
@@ -115,8 +118,8 @@ source('scripts/TrioNsight.R')
 We gratefully acknowledge the fundings from the following organisations:
 
 Alperen Taciroğlu was supported by: 
--2211/A National PhD Scholarship Programs from Scientific and Technological Research Council of Türkiye (TÜBİTAK)
--Scientific Exchange Grant (Case: 9964) from European Molecular Biology Organization (EMBO). 
+* 2211/A National PhD Scholarship Programs from Scientific and Technological Research Council of Türkiye (TÜBİTAK)
+* Scientific Exchange Grant (Case: 9964) from European Molecular Biology Organization (EMBO). 
 This work was supported by funding from Council of Higher Education Turkey (YÖK) - Research Universities Support Program (project no: ADEP-704-2024-11501)
 
 We gratefully acknowledge the help from the following researchers:
