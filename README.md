@@ -109,9 +109,16 @@ source('scripts/helper.R')
 ```
 # Under preferred IDE for R
 source('scripts/TrioNsight.R')
+TrioNSight()
+# Follow the script to use precomputed ScoreCons, VariPred, SAAPdap, Variant Clustering results or to compute them from the scratch.
 ```
 
 ## ✔ Data availability
+
+All of the data created for this work is under the main branch of this repository.
+
+> [!NOTE]  
+> Variants extracted from HGMD Pro database are removed from the files to comply with the HGMD Pro licence. 
 
 ## ❛❛❞ Citing this work
 
@@ -131,4 +138,4 @@ We gratefully acknowledge the help from the following researchers:
 * Dr. Paul Ashford for his valuable discussions on the 3D-clustering of variants on protein structures.
 * Dr. Vaishali Waman for her help in generating high-resolution structural models using PyMOL.
 * Weining Lin for her insightful discussions on state-of-the-art variant impact predictors.
-* PI Ogün Adebali for allowing access to Sabancı University Troya HPC Cluster. 
+* Assoc. Prof. Ogün Adebali for allowing access to Sabancı University Troya HPC Cluster. 
