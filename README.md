@@ -83,9 +83,11 @@ For the SAAPdap repo please visit https://github.com/ACRMGroup/SAAP3
 
 > [!NOTE]  
 > Not mandatory if you'd like to use precalculated SAAPdap output used in the training of the TrioNsight -> Go to [Run TrioNsight](#-run-trionsight)
+> 
 > If you need to run SAAPdap yourself, continue with SAAPdap installation directly below
 
 Please go to SAAP3 repository and follow the installation instructions.
+
 SAAPdap should be installed under TrioNsight/structure_analysis/. Alternatively, modify the paths under TrioNsight/scripts/SAAPdap.R wrapper function based on chosen SAAPdap installation directory.
 
 ### <ins>R packages</ins>
@@ -99,7 +101,9 @@ source('scripts/helper.R')
 
 > [!IMPORTANT]
 > Running TrioNsight is not required to access the data for all possible amino acid replacements - 50122 variant effect predictions.
+> 
 > To access this data, please download "TrioNsight_predictions.txt" file located under the main branch.
+> 
 > To reproduce the results, please continue with running TrioNsight.
 
 ```
