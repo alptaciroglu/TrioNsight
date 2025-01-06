@@ -117,9 +117,6 @@ TrioNSight()
 
 All of the data created for this work is under the main branch of this repository.
 
-> [!NOTE]  
-> Variants extracted from HGMD Pro database are removed from the files to comply with the HGMD Pro licence. 
-
 ## ❛❛❞ Citing this work
 
 ## 🤝 Acknowledgement
