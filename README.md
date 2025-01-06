@@ -117,6 +117,8 @@ TrioNSight()
 
 All of the data created for this work is under the main branch of this repository.
 
+The predictions generated with TrioNsight can be found in TrioNsight_all_predictions.txt file under the main repo. 
+
 ## ❛❛❞ Citing this work
 
 ## 🤝 Acknowledgement
