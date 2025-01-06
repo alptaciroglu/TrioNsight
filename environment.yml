@@ -1,0 +1,27 @@
+name: trionsight
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - pip
+  - python=3.9
+  - r-base=4.3
+  - r-magrittr=2.0.3
+  - r-flextable=0.9.6
+  - r-adabag=5.0
+  - r-doparallel=1.0.17
+  - r-iterators=1.0.14
+  - r-foreach=1.5.2
+  - r-caret=6.0.94
+  - r-lattice=0.22-6
+  - r-ggplot2=3.5.1
+  - r-rpart=4.1.23
+  - r-dplyr=1.1.4
+  - r-stringr=1.5.1
+  - r-rjson=0.2.21
+  - r-jsonlite=1.8.8
+  - r-httr=1.4.7
+  - r-data.table=1.15.4
+  - r-biocmanager=1.30.23
+  - r-bio3d=2.4.4

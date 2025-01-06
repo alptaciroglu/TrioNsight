@@ -1,0 +1,36 @@
+{"SAAPS":
+   { "uniprotac": "O75962",
+     "resnum": 1431,
+     "native": "LYS",
+     "mutant": "MET",
+     "pdbs"  : [
+{"SAAP":
+   { "file": "O60229_1273_1617_af.pdb",
+     "pdbcode": "NA",
+     "residue": "A148",
+     "mutation": "MET",
+     "structuretype": "Novalidinfo",
+     "resolution": "",
+     "rfactor": "",
+     "results": {
+         "Binding": {"Binding-BOOL": "OK"},
+         "BuriedCharge": {"BuriedCharge-RELACCESS": "58.034", "BuriedCharge-MUTANT-CHARGE": "0", "BuriedCharge-NATIVE-CHARGE": "1", "BuriedCharge-BOOL": "OK"},
+         "CisPro": {"CisPro-NATIVE": "LYS", "CisPro-OMEGA": "179.699", "CisPro-BOOL": "OK"},
+         "Clash": {"Clash-BOOL": "OK", "Clash-ENERGY": "-4.80"},
+         "CorePhilic": {"CorePhilic-RELACCESS": "58.034", "CorePhilic-NATIVE-HPHOB": "-1.1", "CorePhilic-MUTANT-HPHOB": "0.26", "CorePhilic-BOOL": "OK"},
+         "Glycine": {"Glycine-PHI": "-68.597", "Glycine-PSI": "-35.683", "Glycine-MUTANT-ENERGY": "", "Glycine-NATIVE-ENERGY": "", "Glycine-NATIVE-THRESHOLD": "0.35", "Glycine-MUTANT": "MET", "Glycine-NATIVE-BOOL": "OK", "Glycine-NATIVE": "LYS", "Glycine-BOOL": "OK", "Glycine-MUTANT-THRESHOLD": ""},
+         "HBonds": {"HBonds-BOOL": "OK", "HBonds-PARTNER-ATOM": "NULL", "HBonds-ZVAL": "NULL", "HBonds-PARTNER-RES": "NULL", "HBonds-ENERGY": "NULL", "HBonds-ATOM": "NULL"},
+         "Impact": {"Impact-ERROR": "FOSTA failed - ID TRIO_HUMAN was not a member of a FOSTA family"},
+         "Interface": {"Interface-RELACCESS-MOL": "58.034", "Interface-RELACCESS": "58.034", "Interface-BOOL": "OK"},
+         "Proline": {"Proline-BOOL": "OK", "Proline-PSI": "-35.683", "Proline-MUTANT-THRESHOLD": "0.53", "Proline-NATIVE-BOOL": "OK", "Proline-PHI": "-68.597", "Proline-NATIVE-ENERGY": "", "Proline-MUTANT": "MET", "Proline-MUTANT-ENERGY": "", "Proline-NATIVE": "LYS", "Proline-NATIVE-THRESHOLD": ""},
+         "SprotFTdist": {"SprotFTdist-BOOL": "OK", "SprotFTdist-ACT_SITE": "-1.000", "SprotFTdist-BINDING": "-1.000", "SprotFTdist-CA_BIND": "-1.000", "SprotFTdist-DNA_BIND": "-1.000", "SprotFTdist-NP_BIND": "-1.000", "SprotFTdist-METAL": "-1.000", "SprotFTdist-MOD_RES": "-1.000", "SprotFTdist-CARBOHYD": "-1.000", "SprotFTdist-MOTIF": "-1.000", "SprotFTdist-LIPID": "-1.000"},
+         "SProtFT": {"SProtFT-NAMES": "", "SProtFT-BOOL": "OK", "SProtFT-FEATURES": "0000000000000"},
+         "SSGeom": {"SSGeom-BOOL": "OK"},
+         "SurfacePhobic": {"SurfacePhobic-RELACCESS": "58.034", "SurfacePhobic-BOOL": "OK", "SurfacePhobic-MUTANT-HPHOB": "0.26", "SurfacePhobic-NATIVE-HPHOB": "-1.1"},
+         "Voids": {"Voids-NATIVE": [183.642,178.894,120.740,109.507,79.910,55.031,54.409,49.987,48.870,46.018], "Voids-MUTANT": [183.642,178.894,120.740,109.507,79.910,55.031,54.409,49.987,48.870,46.018], "Voids-BOOL": "OK", "Voids-NATIVE-LARGEST": "183.642000", "Voids-MUTANT-LARGEST": "183.642000"}
+      }
+   }
+}
+      ]
+   }
+}
