@@ -4,7 +4,7 @@
 #' @param fullLengthSequences a fasta file containing the full length protein sequences related to variants
 #' @export
 #' 
-generateVariPredInput <- function(variant_data, fullLengthSequences){
+generateVariPredInput <- function(variant_data, dirVariPred, fullLengthSequences){
   
   variant_data <- unique(variant_data[,.(target_id, Variant_Location, REF, ALT)])
   target_id <- variant_data$target_id
@@ -24,7 +24,7 @@ generateVariPredInput <- function(variant_data, fullLengthSequences){
     new_seq
   })
   
-  write.csv(varipred_df, 'VariPred_files/varipred_input.csv', row.names = F)
+  write.csv(varipred_df, paste(dirVariPred, 'varipred_input.csv', sep = ''), row.names = F)
 }
 
 #' Run VariPred on the variant data or use precalculated output
@@ -35,7 +35,7 @@ generateVariPredInput <- function(variant_data, fullLengthSequences){
 #' @param precalculated_varipred a character string indicating the path to the precalculated VariPred output
 #' @export
 #' 
-varipred_main <- function(use_existing_results = TRUE, variant_data, fullLengthSequences, precalculated_varipred){
+varipred_main <- function(use_existing_results = TRUE, variant_data, fullLengthSequences, dirVariPred, precalculated_varipred){
 
   underscore_start("Obtaining VariPred output")
   
@@ -61,17 +61,17 @@ varipred_main <- function(use_existing_results = TRUE, variant_data, fullLengthS
   else{
     cat(paste(' ', calculation_sign, ' Generating VariPred input file ', calculation_sign, '\n', sep = ''))
     generateVariPredInput(variant_data = variant_data, fullLengthSequences = fullLengthSequences)
-    if(!file.exists('VariPred_files/varipred_input.csv')){
+    if(!file.exists(paste(dirVariPred, 'varipred_input.csv', sep = ''))){
       stop(paste(' ', error_sign, ' VariPred input file not generated! Please check the input data', sep = ''))
     }
     else{
       cat(paste(' VariPred file generated ', completion_sign, '\n', sep = ''))
     }
     
-    if(!dir.exists('VariPred')){
+    if(!dir.exists(dirVariPred)){
       stop(paste(' ', error_sign, ' The VariPred directory not found! If VariPred installed in your system, please provide the path to the directory', sep = ''))
     }
-    setwd('VariPred/VariPred')
+    setwd(dirVariPred)
     cat(paste(' ', calculation_sign, ' Running VariPred ', calculation_sign, '\n', sep = ''))
     system(paste('python3 main.py -p ../../VariPred_files/ -i varipred_input -o varipred_output', sep = ''))
     setwd('../../')

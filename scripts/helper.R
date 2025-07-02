@@ -60,6 +60,10 @@ if (!requireNamespace("magrittr", quietly = TRUE)) {
   BiocManager::install('magrittr')
 }
 library(magrittr)
+if (!requireNamespace("officer", quietly = TRUE)) {
+  BiocManager::install('officer')
+}
+library(officer)
 
 source('scripts/variant_inheritance.R')
 source('scripts/get_sequence_based_features.R')
@@ -83,6 +87,7 @@ PHACT_TrioN_like <- readRDS('stable_run/PHACT_TrioN_like.rds')
 DHDomains2PDBsAnnot <- readRDS('resources/DHDomains2PDBsAnnot.rds')
 reference_clustering <- readRDS('stable_run/reference_clustering.rds')
 model_domainboundaries <- readRDS('resources/model_domainboundaries.rds')
+trainingSet_Overlaps <- readRDS('resources/trainingSet_Overlaps.rds')
 
 ####################################################
 

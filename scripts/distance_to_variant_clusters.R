@@ -94,7 +94,7 @@ create_strucclus_dat <- function(variant_data, aligned_str_folder, aa_codes, rev
     track_progress(i, length(pdb_files))
   }
   
-  variants2cluster <- variant_data[,c("target_id", "Variant_Seq", "ClinicalSignificance")]
+  variants2cluster <- variant_data[,c("target_id", "Variant_Seq", "Class")]
   variants2cluster <- unique(variants2cluster)
   colnames(variants2cluster)[3] <- 'class'
   
@@ -677,7 +677,7 @@ find_closest_residue <- function(pdb, var_coords, var_id, aa_codes, reverse_aa_c
 #' @return a data.table containing the variant data annotated with the distance metrics
 #' @export
 #' 
-variant_clusters_main <- function(use_existing_results = FALSE, use_existing_clusters_only = TRUE, modelsFolder, fixed_structure_file, aligned_str_folder, max_aln_attempts, max_aln_cycles, aa_codes, reverse_aa_codes, strucclus_res_folderpath, distance_reference_pdb = 'TrioN_DHPH_1290_1594_A_1nty', best_n_reference, variant_data_annotated){
+variant_clusters_main <- function(use_existing_results = FALSE, use_existing_clusters_only = TRUE, modelsFolder, fixed_structure_file, aligned_str_folder, reference_clustering, model_domainboundaries, max_aln_attempts, max_aln_cycles, aa_codes, reverse_aa_codes, strucclus_res_folderpath, distance_reference_pdb = 'TrioN_DHPH_1290_1594_A_1nty', best_n_reference, variant_data_annotated, data_overlap = NULL){
   
   underscore_start("Starting variant clustering analysis")
   
@@ -691,6 +691,15 @@ variant_clusters_main <- function(use_existing_results = FALSE, use_existing_clu
     setwd('structure_analysis/')
     aln_structures(modelsFolder = modelsFolder, fixed_structure_file = fixed_structure_file, 
                    aligned_str_folder = aligned_str_folder, max_aln_attempts = max_aln_attempts, max_aln_cycles = max_aln_cycles)
+    
+    if(!is.null(data_overlap)){
+      cat(paste(' ', warning_sign, ' Removing variants that overlap with TrioNsight data ', warning_sign, '\n', sep = ''))
+      variant_data_annotated <- as.data.table(variant_data_annotated)
+      number_of_variants_before <- nrow(variant_data_annotated)
+      variant_data_annotated <- variant_data_annotated[!target_id %in% data_overlap$TrioNsight]
+      number_of_variants_after <- nrow(variant_data_annotated)
+      cat(paste(' ', warning_sign, ' Removed ', number_of_variants_before - number_of_variants_after, ' variants that overlap with TrioNsight data ', warning_sign, '\n', sep = ''))
+    }
     
     closest_residue_list <- create_strucclus_dat(variant_data = variant_data_annotated, 
                                                  aligned_str_folder = aligned_str_folder, 

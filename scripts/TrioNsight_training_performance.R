@@ -129,25 +129,21 @@ preprocess_training_data <- function(dt){
   return(dt)
 }
 
-train_all_methods_all_formulas <- function(dt, models, iterations, model_output){
-  
-  # Initialize .folds_
-  num_folds <- length(unique(dt$MSALocation))
-  fold_cols <- paste(".folds_", seq_len(num_folds), sep = "")
-  
-  idxList <- list()
-  # LOOCV based on MSALocation
-  unique_locs <- unique(dt$MSALocation)
-  
-  for (i in 1:length(unique_locs)) {
-    idxList[[fold_cols[i]]] <- which(dt$MSALocation != unique_locs[i])
-  }
-  fitControl <- trainControl(index = idxList, classProbs = TRUE, summaryFunction = twoClassSummary, savePredictions = TRUE, verboseIter = TRUE)
-  
-  trained_models <- list()
+initialize_formulas <- function(dt){
   
   variant_clusters_names <- names(dt)[grepl('distance_to_cluster', names(dt))]
+  variant_clusters_columns <- variant_clusters_names
   variant_clusters_names <- paste(variant_clusters_names, collapse = " - ")
+  
+  StructuralFeatures <- c("Interface", "Relaccess", "Impact",	"HBonds",	"SPhobic", "CPhilic", "BCharge", "SSGeom", "Voids",	"MLargest1",
+                          "MLargest2", "MLargest3",	"MLargest4", "MLargest5", "MLargest6", "MLargest7", "MLargest8", "MLargest9", 
+                          "MLargest10", "NLargest1", "NLargest2", "NLargest3", "NLargest4", "NLargest5", "NLargest6", "NLargest7", 
+                          "NLargest8", "NLargest9", "NLargest10",	"Clash", "Glycine", "Proline", "CisPro", "foldxDdg", "foldx_plddt")
+  
+  StructuralFeatures <- intersect(names(dt), StructuralFeatures)
+  StructuralFeatures <- c(StructuralFeatures, variant_clusters_columns)
+  StructuralFeatures_columns <- StructuralFeatures
+  StructuralFeatures <- paste(StructuralFeatures, collapse = " - ")
   
   SAAPdap <- c("Binding", "SProtFT_NAMES", "SProtFT_BOOL", "SProtFT_FEATURES", "SProtFTDist_BOOL", 
                "SProtFT_ACT_SITE", "SProtFT_BINDING", "SProtFT_CA_BIND", "SProtFT_DNA_BIND", "SProtFT_NP_BIND", 
@@ -158,40 +154,93 @@ train_all_methods_all_formulas <- function(dt, models, iterations, model_output)
                "NLargest8", "NLargest9", "NLargest10",	"Clash", "Glycine", "Proline", "CisPro")
   
   SAAPdap <- intersect(names(dt), SAAPdap)
+  SAAPdap_columns <- SAAPdap
   SAAPdap <- paste(SAAPdap, collapse = " - ")
   
+  SequenceFeatures <- c("Binding", "SProtFT_NAMES", "SProtFT_BOOL", "SProtFT_FEATURES", "SProtFTDist_BOOL", 
+                        "SProtFT_ACT_SITE", "SProtFT_BINDING", "SProtFT_CA_BIND", "SProtFT_DNA_BIND", "SProtFT_NP_BIND", 
+                        "SProtFT_METAL", "SProtFT_MOD_RES", "SProtFT_CARBOHYD", "SProtFT_MOTIF", "SProtFT_LIPID", 
+                        'ScoreCons', 'BLOSUM80', 'Grantham', 'varSite')
+  SequenceFeatures <- intersect(names(dt), SequenceFeatures)
+  SequenceFeatures_columns <- SequenceFeatures
+  SequenceFeatures <- paste(SequenceFeatures, collapse = " - ")
+  
+  CompPredictorsOnly <- c(SAAPdap_columns, variant_clusters_columns, 'ScoreCons', 'BLOSUM80', 'Grantham', 'varSite', 'foldxDdg', 'foldx_plddt')
+  CompPredictorsOnly <- intersect(names(dt), CompPredictorsOnly)
+  CompPredictorsOnly <- paste(CompPredictorsOnly, collapse = " - ")
+  
+  return(list(variant_clusters_names = variant_clusters_names, 
+              StructuralFeatures = StructuralFeatures, 
+              SAAPdap = SAAPdap, 
+              SequenceFeatures = SequenceFeatures, 
+              CompPredictorsOnly = CompPredictorsOnly))
+  
+}
+
+train_all_methods_all_formulas <- function(dt, models, iterations, preTuned = FALSE, model_output){
+  
+  dt_save <- dt
+  
+  # Initialize .folds_
+  num_folds <- length(unique(dt$MSALocation))
+  fold_cols <- paste(".folds_", seq_len(num_folds), sep = "")
+  
+  idxList <- list()
+  # LOOCV based on MSALocation
+  unique_locs <- unique(dt$MSALocation)
+  dt <- dt_save
+  
+  for (i in 1:length(unique_locs)) {
+    idxList[[fold_cols[i]]] <- which(dt$MSALocation != unique_locs[i])
+  }
+  fitControl <- trainControl(index = idxList, classProbs = TRUE, summaryFunction = twoClassSummary, savePredictions = TRUE, verboseIter = TRUE)
+  
+  trained_models <- list()
+  
+  formula_list <- initialize_formulas(dt = dt)
   ## dt[, rowIndex := NULL]
   
   for(model in models){
     
     for(i in 1:length(iterations)) {
-      
       if(i == 1){
         formulaName <- 'Inclusive'
       }
-      else if(i == 2){
+      else if (i == 2){
         formulaName <- 'NofoldX'
       }
       else if (i == 3){
-        formulaName <- 'NovarSite'
-      }
-      else if (i == 4){
-        formulaName <- 'NoAlphaMissense'
-      }
-      else if (i == 5){
-        formulaName <- 'NoVariPred'
-      }
-      else if (i == 6){
-        formulaName <- 'NoPHACTboost'
-      }
-      else if (i == 7){
-        formulaName <- 'NoSAAPdap'
-      }
-      else if (i == 8){
         formulaName <- 'NoVariantClusters'
       }
+      else if (i == 4){
+        formulaName <- 'NoSAAPdap'
+      }
+      else if (i == 5){
+        formulaName <- 'NoStructuralFeatures'
+      }
+      else if (i == 6){
+        formulaName <- 'NovarSite'
+      }
+      else if (i == 7){
+        formulaName <- 'NoSequenceFeatures'
+      }
+      else if (i == 8){
+        formulaName <- 'NoAlphaMissense'
+      }
       else if (i == 9){
+        formulaName <- 'NoVariPred'
+      }
+      else if (i == 12){
+        formulaName <- 'NoPHACT'
+      }
+      else if (i == 11){
+        formulaName <- 'NoPHACTboost'
+      }
+      else if (i == 12){
         formulaName <- 'Exclusionary'
+      }
+      else if (i == 13){
+        formulaName <- 'CompPredictorsOnly'
       }
       
       cat(paste('Model: ', model, ', Iteration: ', formulaName, sep = ''), '\n')
@@ -200,10 +249,19 @@ train_all_methods_all_formulas <- function(dt, models, iterations, model_output)
       
       if(formulaName != 'Inclusive'){
         if(formulaName == 'NoVariantClusters'){
-          formula <- as.formula(paste(deparse(formula), "-", variant_clusters_names))
+          formula <- as.formula(paste(deparse(formula), "-", formula_list$variant_clusters_names))
         }
         else if(formulaName == 'NoSAAPdap'){
-          formula <- as.formula(paste(deparse(formula), "-", SAAPdap))
+          formula <- as.formula(paste(deparse(formula), "-", formula_list$SAAPdap))
+        }
+        else if(formulaName == 'NoStructuralFeatures'){
+          formula <- as.formula(paste(deparse(formula), "-", formula_list$StructuralFeatures))
+        }
+        else if(formulaName == 'NoSequenceFeatures'){
+          formula <- as.formula(paste(deparse(formula), "-", formula_list$SequenceFeatures))
+        }
+        else if(formulaName == 'CompPredictorsOnly'){
+          formula <- as.formula(paste(deparse(formula), "-", formula_list$CompPredictorsOnly))
         }
         else{
           formula <- as.formula(paste(deparse(formula), "-", iterations[i]))
@@ -212,25 +270,51 @@ train_all_methods_all_formulas <- function(dt, models, iterations, model_output)
       cat(paste('The formula is:', Reduce(paste, deparse(formula)), sep = ' '), '\n')
       
       modelsWithLessParams <- c('knn', 'gbm', 'xgbTree', 'xgbLinear', 'glmboost', 'ranger', 'earth', 'rpart', 'bagFDA')
-      if(model %in% modelsWithLessParams){
-        modelTrained <- train(formula, data = dt, 
-                              method = model,
-                              preProc = c("center", "scale"),
-                              trControl = fitControl,
-                              tuneLength = 5,  # Add tuning
-                              metric = "ROC",  # Change this if not a classification problem
-                              maximize = TRUE)  # TRUE if using accuracy or other metrics where higher is better
+      if(isFALSE(preTuned)){
+        if(model %in% modelsWithLessParams){
+          modelTrained <- train(formula, data = dt, 
+                                method = model,
+                                preProc = c("center", "scale"),
+                                trControl = fitControl,
+                                tuneLength = 15,  # Add tuning
+                                metric = "ROC",  # Change this if not a classification problem
+                                maximize = TRUE)  # TRUE if using accuracy or other metrics where higher is better
+        }
+        else{
+          modelTrained <- train(formula, data = dt, 
+                                method = model,
+                                preProc = c("center", "scale"),
+                                trControl = fitControl,
+                                allowParallel = TRUE,
+                                tuneLength = 15,  # Add tuning
+                                metric = "ROC",  # Change this if not a classification problem
+                                maximize = TRUE,  # TRUE if using accuracy or other metrics where higher is better
+                                verbose = TRUE)
+        }
       }
       else{
-        modelTrained <- train(formula, data = dt, 
-                              method = model,
-                              preProc = c("center", "scale"),
-                              trControl = fitControl,
-                              allowParallel = TRUE,
-                              tuneLength = 5,  # Add tuning
-                              metric = "ROC",  # Change this if not a classification problem
-                              maximize = TRUE,  # TRUE if using accuracy or other metrics where higher is better
-                              verbose = TRUE)
+        preTuned <- preTuned_dt[[model]]
+        preTuned <- expand.grid(preTuned)
+        if(model %in% modelsWithLessParams){
+          modelTrained <- train(formula, data = dt, 
+                                method = model,
+                                preProc = c("center", "scale"),
+                                trControl = fitControl,
+                                tuneGrid = preTuned,
+                                metric = "ROC",  # Change this if not a classification problem
+                                maximize = TRUE)  # TRUE if using accuracy or other metrics where higher is better
+        }
+        else{
+          modelTrained <- train(formula, data = dt, 
+                                method = model,
+                                preProc = c("center", "scale"),
+                                trControl = fitControl,
+                                allowParallel = TRUE,
+                                tuneGrid = preTuned,
+                                metric = "ROC",  # Change this if not a classification problem
+                                maximize = TRUE,  # TRUE if using accuracy or other metrics where higher is better
+                                verbose = TRUE)
+        }
       }
       trained_models[[model]][[formulaName]] <- modelTrained
     }
@@ -239,9 +323,9 @@ train_all_methods_all_formulas <- function(dt, models, iterations, model_output)
   return(trained_models)
 }
 
-optimizing_hyperparameters <- function(model_input, model_output){
+optimizing_hyperparameters_retrieve_predictions <- function(dt, model_input, model_output){
   
-  optimized_models <- list()
+  predictions_models <- list()
   
   for(i in 1:length(model_input)){
     for(j in 1:length(model_input[[i]])){
@@ -263,46 +347,46 @@ optimizing_hyperparameters <- function(model_input, model_output){
         tmpPred[[bestTune_param]] <- NULL
       }
       tmpPred[['Resample']] <- NULL
-      optimized_models[[modelName]][[formulaName]] <- tmpPred
+      predictions_models[[modelName]][[formulaName]] <- tmpPred
     }
   }
   
   dt[, rowIndex := .I]
-  for(i in 1:length(optimized_models)){
-    for(j in 1:length(optimized_models[[i]])){
-      optimized_models[[i]][[j]] <- as.data.table(merge(optimized_models[[i]][[j]], dt[,.(target_id, rowIndex)], by = 'rowIndex'))
-      optimized_models[[i]][[j]][, rowIndex := NULL]
-      optimized_models[[i]][[j]][, pred := NULL]
+  for(i in 1:length(predictions_models)){
+    for(j in 1:length(predictions_models[[i]])){
+      predictions_models[[i]][[j]] <- as.data.table(merge(predictions_models[[i]][[j]], dt[,.(target_id, rowIndex)], by = 'rowIndex'))
+      predictions_models[[i]][[j]][, rowIndex := NULL]
+      predictions_models[[i]][[j]][, pred := NULL]
       
-      observed <- unique(optimized_models[[i]][[j]][, .(target_id, obs)])
+      observed <- unique(predictions_models[[i]][[j]][, .(target_id, obs)])
       colnames(observed)[2] <- 'obs'
-      optimized_models[[i]][[j]][, obs := NULL]
+      predictions_models[[i]][[j]][, obs := NULL]
       
-      if(length(optimized_models[[i]][[j]][is.nan(Benign)]$Benign) > 0){
-        cat(paste('There are', length(optimized_models[[i]][[j]][is.nan(Benign)]$Benign), 'NAs in Benign\n', sep = ' '))
-        optimized_models[[i]][[j]][is.nan(Benign)]$Benign <- 0.50001
+      if(length(predictions_models[[i]][[j]][is.nan(Benign)]$Benign) > 0){
+        cat(paste('There are', length(predictions_models[[i]][[j]][is.nan(Benign)]$Benign), 'NAs in Benign\n', sep = ' '))
+        predictions_models[[i]][[j]][is.nan(Benign)]$Benign <- 0.50001
       }
-      if(length(optimized_models[[i]][[j]][is.nan(Pathogenic)]$Pathogenic) > 0){
-        cat(paste('There are', length(optimized_models[[i]][[j]][is.nan(Pathogenic)]$Pathogenic), 'NAs in Pathogenic\n', sep = ' '))
-        optimized_models[[i]][[j]][is.nan(Pathogenic)]$Pathogenic <- 0.49999
+      if(length(predictions_models[[i]][[j]][is.nan(Pathogenic)]$Pathogenic) > 0){
+        cat(paste('There are', length(predictions_models[[i]][[j]][is.nan(Pathogenic)]$Pathogenic), 'NAs in Pathogenic\n', sep = ' '))
+        predictions_models[[i]][[j]][is.nan(Pathogenic)]$Pathogenic <- 0.49999
       }
       
-      optimized_models[[i]][[j]] <- aggregate(optimized_models[[i]][[j]], by = list(optimized_models[[i]][[j]]$target_id), mean)
-      optimized_models[[i]][[j]] <- as.data.table(optimized_models[[i]][[j]])
-      optimized_models[[i]][[j]][, target_id := NULL]
-      colnames(optimized_models[[i]][[j]])[1] <- 'target_id'
+      predictions_models[[i]][[j]] <- aggregate(predictions_models[[i]][[j]], by = list(predictions_models[[i]][[j]]$target_id), mean)
+      predictions_models[[i]][[j]] <- as.data.table(predictions_models[[i]][[j]])
+      predictions_models[[i]][[j]][, target_id := NULL]
+      colnames(predictions_models[[i]][[j]])[1] <- 'target_id'
       
-      optimized_models[[i]][[j]][, pred := ifelse(Pathogenic > Benign, "Pathogenic", "Benign")]
-      optimized_models[[i]][[j]] <- merge(optimized_models[[i]][[j]], observed, by = 'target_id')
+      predictions_models[[i]][[j]][, pred := ifelse(Pathogenic > Benign, "Pathogenic", "Benign")]
+      predictions_models[[i]][[j]] <- merge(predictions_models[[i]][[j]], observed, by = 'target_id')
     }
   }
-  saveRDS(optimized_models, file = paste('predictor/', model_output, '_optimized.rds', sep = ''))
-  return(optimized_models)
+  saveRDS(predictions_models, file = paste('predictor/predictions_', model_output, '.rds', sep = ''))
+  return(predictions_models)
 }
 
-model_performance_calculation <- function(optimized_models, model_names, external_predictors = NULL, external_predictor_results = NULL, performance_output){
+model_performance_calculation <- function(predictions_models, model_names, external_predictors = NULL, external_predictor_results = NULL, data_overlap = NULL, performance_output){
   
-  formulas <- names(optimized_models[[1]])
+  formulas <- names(predictions_models[[1]])
   
   if(!is.null(external_predictors)){
     models_formulas <- c(external_predictors, c(outer(model_names, formulas, FUN = paste, sep = "~")))
@@ -319,11 +403,14 @@ model_performance_calculation <- function(optimized_models, model_names, externa
     
     for(formula in formulas) {
       
-      if(formula %in% names(optimized_models[[model]])) {
-        data <- optimized_models[[model]][[formula]]$obs
-        data <- as.data.table(as.character(optimized_models[[model]][[formula]]$obs))
+      if(formula %in% names(predictions_models[[model]])) {
+        
+        data <- predictions_models[[model]][[formula]]$obs
+        data <- as.data.table(as.character(data))
         colnames(data) <- 'Class'
-        predicted <- optimized_models[[model]][[formula]]$pred
+        data$Class <- factor(data$Class, levels = c("Benign", "Pathogenic"))
+        predicted <- predictions_models[[model]][[formula]]$pred
+        predicted <- factor(predicted, levels = levels(data$Class))
         model_formula <- paste(model, '~', formula, sep = '')
         
         metrics[Predictor == model_formula, Precision := precision(predicted, data$Class, positive_class = "Pathogenic")]
@@ -339,86 +426,78 @@ model_performance_calculation <- function(optimized_models, model_names, externa
   
   if(!is.null(external_predictors)){
     external_predictor_results[Class == 'Ambigious', Class := 'Pathogenic']
-    data <- external_predictor_results
     
     for(predictor in external_predictors) {
-      predicted <- data[[predictor]]
       
-      metrics[Predictor == predictor, Precision := precision(predicted, data$Class, positive_class = "Pathogenic")]
-      metrics[Predictor == predictor, Recall := recall(predicted, data$Class, positive_class = "Pathogenic")]
-      metrics[Predictor == predictor, Accuracy := accuracy(predicted, data$Class)]
-      metrics[Predictor == predictor, False_Positive_Rate := false_positive_rate(predicted, data$Class, positive_class = "Pathogenic")]
-      metrics[Predictor == predictor, False_Negative_Rate := false_negative_rate(predicted, data$Class, positive_class = "Pathogenic")]
-      metrics[Predictor == predictor, F1_Score := f1_score(predicted, data$Class, positive_class = "Pathogenic")]
-      metrics[Predictor == predictor, MCC := mcc_score(predicted, data$Class, positive_class = "Pathogenic")]
+      data <- external_predictor_results
+      data <- as.data.table(cbind(data[,.(target_id, Class)], data[[predictor]]))
+      colnames(data)[3] <- predictor
+      if(!is.null(data_overlap)){
+        data <- data[!target_id %in% data_overlap[[predictor]]]
+      }
+      predicted <- data[[predictor]]
+      observed <- data[['Class']]
+      
+      metrics[Predictor == predictor, Precision := precision(predicted, observed, positive_class = "Pathogenic")]
+      metrics[Predictor == predictor, Recall := recall(predicted, observed, positive_class = "Pathogenic")]
+      metrics[Predictor == predictor, Accuracy := accuracy(predicted, observed)]
+      metrics[Predictor == predictor, False_Positive_Rate := false_positive_rate(predicted, observed, positive_class = "Pathogenic")]
+      metrics[Predictor == predictor, False_Negative_Rate := false_negative_rate(predicted, observed, positive_class = "Pathogenic")]
+      metrics[Predictor == predictor, F1_Score := f1_score(predicted, observed, positive_class = "Pathogenic")]
+      metrics[Predictor == predictor, MCC := mcc_score(predicted, observed, positive_class = "Pathogenic")]
     }
     
     metrics[Predictor == 'PolyPhen2', Predictor := 'PolyPhen-2']
     metrics[Predictor == 'ESM1b', Predictor := 'ESM-1b']
   }
   
-  saveRDS(metrics, file = paste('predictor/', performance_output, '_performances.rds', sep = ''))
+  saveRDS(metrics, file = paste('predictor/performance_', performance_output, '.rds', sep = ''))
   return(metrics)
 }
 
 ###############################################################
 
-iterations <- c('', 'foldxDdg - foldx_plddt', 'varSite', 'AlphaMissense_Score' , 'VariPred_Class', 'PHACT_Score - PHACTboost_Score', 'SAAPdap', 'distance_to_clusters', 'AlphaMissense_Score - VariPred_Class - PHACT_Score - PHACTboost_Score')
+## Change the code accordingly to train & test using the desired variant dataset, iterations, models.
+iterations <- c('', 'foldxDdg - foldx_plddt', 'NoVariantClusters', 'NoSAAPdap', 'NoStructuralFeatures', 'varSite', 'NoSequenceFeatures', 'AlphaMissense_Score' , 'VariPred_Class', 'PHACT_Score', 'PHACTboost_Score', 'AlphaMissense_Score - VariPred_Class - PHACT_Score - PHACTboost_Score', 'CompPredictorsOnly')
+# iterations <- c('')
 models <- c("rf", "svmRadial", "svmLinear", "gbm", "glmnet", "glmboost", "knn", "nnet", "avNNet", "naive_bayes",
             "xgbTree", "xgbLinear", "ranger", "earth", "pcaNNet", "rpart", "C5.0", "bagFDA")
-external_predictors <- c('CADD', 'ESM1b', 'AlphaMissense', 'VariPred', 'MutPred2', 'PolyPhen2', 'PHACTboost')
+# models <- 'naive_bayes'
+external_predictors <- c('CADD', 'ESM1b', 'AlphaMissense', 'VariPred', 'MutPred2', 'PolyPhen2', 'PHACT', 'PHACTboost')
+preTuned_dt <- readRDS('resources/fineTuningParams_best.rds')
 
+TrioNsight_features_dt <- fread('resources/TrioNsight_features_dataset.txt', sep = '\t')
+TrioNsight_features_preprocessed_dt <- preprocess_training_data(TrioNsight_features_dt)
+trainingSet_Overlaps <- readRDS('resources/trainingSet_Overlaps.rds')
 
-dt <- fread('resources/TrioNsight_features_dataset.txt', sep = '\t')
-dt_preprocessed <- preprocess_training_data(dt)
-models_all_methods_all_formulas <- train_all_methods_all_formulas(dt_preprocessed, models = models, iterations = iterations, model_output = 'models_all_methods_all_formulas')
-models_all_methods_all_formulas_optimized <- optimizing_hyperparameters(model_input = models_all_methods_all_formulas, model_output = 'models_all_methods_all_formulas')
+all_models_all_methods_wDataOverlap <- train_all_methods_all_formulas(TrioNsight_features_preprocessed_dt, models = models, iterations = iterations, preTuned = preTuned_dt, model_output = 'all_models_all_methods_wDataOverlap')
+predictions_all_models_all_methods_wDataOverlap <- optimizing_hyperparameters_retrieve_predictions(dt = TrioNsight_features_preprocessed_dt, model_input = all_models_all_methods_wDataOverlap, model_output = 'all_models_all_methods_wDataOverlap')
 
 external_predictor_results <- fread('resources/external_predictions.txt', sep = '\t')
-external_predictor_results_Bool <- external_predictor_results[, .(Class, AlphaMissense_Class, VariPred_Class, CADD_Class, ESM1b_Class, MutPred2_Class, PolyPhen2_Class, PHACTboost_Class)]
+external_predictor_results_Bool <- external_predictor_results[, .(target_id, Class, AlphaMissense_Class, VariPred_Class, CADD_Class, ESM1b_Class, MutPred2_Class, PolyPhen2_Class, PHACT_Class, PHACTboost_Class)]
 colnames(external_predictor_results_Bool) <- sapply(strsplit(colnames(external_predictor_results_Bool), '_', fixed = T), '[', 1)
-external_predictor_results_Scores <- external_predictor_results[, .(Class, AlphaMissense_Score, CADD_Score, ESM1b_Score, MutPred2_Score, PolyPhen2_Score, PHACTboost_Score)]
+colnames(external_predictor_results_Bool)[1] <- 'target_id'
+external_predictor_results_Scores <- external_predictor_results[, .(target_id, Class, AlphaMissense_Score, CADD_Score, ESM1b_Score, MutPred2_Score, PolyPhen2_Score, PHACT_Score, PHACTboost_Score)]
 colnames(external_predictor_results_Scores) <- sapply(strsplit(colnames(external_predictor_results_Scores), '_', fixed = T), '[', 1)
+colnames(external_predictor_results_Scores)[1] <- 'target_id'
 
-formulas <- names(models_all_methods_all_formulas_optimized[[1]])
-models_all_methods_all_formulas_performances <- model_performance_calculation(optimized_models = models_all_methods_all_formulas_optimized, 
+formulas <- names(predictions_all_models_all_methods_wDataOverlap[[1]])
+models_all_methods_all_formulas_performances <- model_performance_calculation(predictions_models = predictions_all_models_all_methods_wDataOverlap, 
                                                                               model_names = models, 
                                                                               external_predictors = external_predictors, 
                                                                               external_predictor_results = external_predictor_results_Bool,
-                                                                              performance_output = 'models_all_methods_all_formulas')
+                                                                              data_overlap = NULL,
+                                                                              performance_output = 'all_models_all_methods_wDataOverlap')
 
 ###############################################################
 
-training_models_multipleruns <- function(dt, models, model_output){
+training_models_multipleruns <- function(dt, models, preTuned, variant_annotations, data_overlap, model_output){
   
-  # Initialize .folds_
-  num_folds <- length(unique(dt$MSALocation))
-  fold_cols <- paste(".folds_", seq_len(num_folds), sep = "")
-  
-  idxList <- list()
   # LOOCV based on MSALocation
   unique_locs <- unique(dt$MSALocation)
+  dt$target_id <- as.factor(dt$target_id)
   
-  for (i in 1:length(unique_locs)) {
-    idxList[[fold_cols[i]]] <- which(dt$MSALocation != unique_locs[i])
-  }
-  fitControl <- trainControl(index = idxList, classProbs = TRUE, summaryFunction = twoClassSummary, savePredictions = TRUE, verboseIter = TRUE)
-  
-  trained_models_multiplerun <- list()
-  
-  variant_clusters_names <- names(dt)[grepl('distance_to_cluster', names(dt))]
-  variant_clusters_names <- paste(variant_clusters_names, collapse = " - ")
-  
-  SAAPdap <- c("Binding", "SProtFT_NAMES", "SProtFT_BOOL", "SProtFT_FEATURES", "SProtFTDist_BOOL", 
-               "SProtFT_ACT_SITE", "SProtFT_BINDING", "SProtFT_CA_BIND", "SProtFT_DNA_BIND", "SProtFT_NP_BIND", 
-               "SProtFT_METAL", "SProtFT_MOD_RES", "SProtFT_CARBOHYD", "SProtFT_MOTIF", "SProtFT_LIPID", 
-               "Interface", "Relaccess", "Impact",	"HBonds",	"SPhobic", "CPhilic", "BCharge", "SSGeom", "Voids",	"MLargest1",
-               "MLargest2", "MLargest3",	"MLargest4", "MLargest5", "MLargest6", "MLargest7", "MLargest8", "MLargest9", 
-               "MLargest10", "NLargest1", "NLargest2", "NLargest3", "NLargest4", "NLargest5", "NLargest6", "NLargest7", 
-               "NLargest8", "NLargest9", "NLargest10",	"Clash", "Glycine", "Proline", "CisPro")
-  
-  SAAPdap <- intersect(names(dt), SAAPdap)
-  SAAPdap <- paste(SAAPdap, collapse = " - ")
+  predictions_multiplerun_list <- list()
   
   formula <- as.formula("Class ~ . - target_id - MSALocation - Inherited_Seq")
   
@@ -429,145 +508,147 @@ training_models_multipleruns <- function(dt, models, model_output){
       runNo <- paste('Training_', i, sep = '')
       cat(paste('At model: ', model, ', at run: ', i, sep = ''), '\n')
       
-      modelsWithLessParams <- c('knn', 'gbm', 'xgbTree', 'xgbLinear', 'glmboost', 'ranger', 'earth', 'rpart', 'bagFDA')
-      if(model %in% modelsWithLessParams){
-        modelTrained <- train(formula, data = dt, 
-                              method = model,
-                              preProc = c("center", "scale"),
-                              trControl = fitControl,
-                              tuneLength = 5,  # Add tuning
-                              metric = "ROC",  # Change this if not a classification problem
-                              maximize = TRUE)  # TRUE if using accuracy or other metrics where higher is better
+      preTuned_next <- preTuned_dt[[model]]
+      preTuned_next <- expand.grid(preTuned_next)
+      
+      for (k in 1:length(unique_locs)) {
+        # Current MSA location for testing
+        current_loc <- unique_locs[k]
+        
+        # Training data: all except current MSA location
+        train_data <- dt[dt$MSALocation != current_loc, ]
+        
+        # Testing data: only non-overlapping variants from current MSA location
+        test_data <- dt[dt$MSALocation == current_loc & 
+                          !dt$target_id %in% data_overlap$TrioNsight, ]
+        
+        # Skip if no non-overlapping variants to test
+        if(nrow(test_data) == 0) next
+        
+        modelsWithLessParams <- c('knn', 'gbm', 'xgbTree', 'xgbLinear', 'glmboost', 'ranger', 'earth', 'rpart', 'bagFDA')
+        
+        if(model %in% modelsWithLessParams) {
+          modelTrained <- train(formula,
+                                data = train_data,
+                                method = model,
+                                preProc = c("center", "scale"),
+                                trControl = trainControl(method = "none", classProbs = TRUE),
+                                tuneGrid = preTuned_next,
+                                metric = "ROC",  # Change this if not a classification problem
+                                maximize = TRUE)  # TRUE if using accuracy or other metrics where higher is better
+        }
+        else {
+          modelTrained <- train(formula,
+                                data = train_data,
+                                method = model,
+                                preProc = c("center", "scale"),
+                                trControl = trainControl(method = "none", classProbs = TRUE),
+                                allowParallel = TRUE,
+                                tuneGrid = preTuned_next,
+                                metric = "ROC",  # Change this if not a classification problem
+                                maximize = TRUE,  # TRUE if using accuracy or other metrics where higher is better
+                                verbose = TRUE)
+        }
+        
+        # Make predictions on test data
+        predictions <- predict(modelTrained, newdata = test_data, type = "prob")
+        predictions <- cbind(test_data$target_id, predictions)
+        
+        # Store results
+        predictions_multiplerun_list[[model]][[runNo]][[current_loc]] <- predictions
+        
       }
-      else{
-        modelTrained <- train(formula, data = dt, 
-                              method = model,
-                              preProc = c("center", "scale"),
-                              trControl = fitControl,
-                              allowParallel = TRUE,
-                              tuneLength = 5,  # Add tuning
-                              metric = "ROC",  # Change this if not a classification problem
-                              maximize = TRUE,  # TRUE if using accuracy or other metrics where higher is better
-                              verbose = TRUE)
-      }
-      trained_models_multiplerun[[model]][[runNo]] <- modelTrained
     }
-    saveRDS(trained_models_multiplerun, file = paste('predictor/', model_output, '.rds', sep = ''))
   }
-  return(trained_models_multiplerun)
+  
+  predictions_multiplerun_parsed <- list()
+  for(i in 1:length(predictions_multiplerun_list)){
+    next_model <- predictions_multiplerun_list[[i]]
+    model_name <- names(predictions_multiplerun_list)[i]
+    for(j in 1:length(next_model)){
+      next_model_iteration <- next_model[[j]]
+      iteration_no <- names(next_model)[j]
+      
+      valid_indices <- which(!sapply(next_model_iteration, is.null))
+      valid_predictions <- next_model_iteration[valid_indices]
+      
+      results <- do.call(rbind, valid_predictions)
+      colnames(results)[1] <- 'target_id'
+      
+      final_results <- results %>%
+        group_by(target_id) %>%
+        summarise(
+          Benign = mean(Benign),
+          Pathogenic = mean(Pathogenic)
+        ) %>%
+        mutate(
+          pred = ifelse(Benign > Pathogenic, "Benign", "Pathogenic")
+        )
+      
+      final_results <- as.data.table(final_results)
+      final_results <- merge(final_results, variant_annotations[,.(target_id, obs)], by = 'target_id')
+      predictions_multiplerun_parsed[[model_name]][[iteration_no]] <- final_results
+    }
+  }
+  
+  saveRDS(predictions_multiplerun_parsed, file = paste('predictor/predictions_', model_output, '.rds', sep = ''))
+  return(predictions_multiplerun_parsed)
 }
 
 ###############################################################
 
-iterations <- c('', 'foldxDdg - foldx_plddt', 'varSite', 'AlphaMissense_Score' , 'VariPred_Class', 'PHACT_Score - PHACTboost_Score', 'SAAPdap', 'distance_to_clusters', 'AlphaMissense_Score - VariPred_Class - PHACT_Score - PHACTboost_Score')
+TrioNsight_features_dt <- fread('resources/TrioNsight_features_dataset.txt', sep = '\t')
+TrioNsight_features_preprocessed_dt <- preprocess_training_data(TrioNsight_features_dt)
+trainingSet_Overlaps <- readRDS('resources/trainingSet_Overlaps.rds')
+
+iterations <- ''
 models <- c("rf", "svmRadial", "svmLinear", "gbm", "glmnet", "glmboost", "knn", "nnet", "avNNet", "naive_bayes",
             "xgbTree", "xgbLinear", "ranger", "earth", "pcaNNet", "rpart", "C5.0", "bagFDA")
-external_predictors <- c('CADD', 'ESM1b', 'AlphaMissense', 'VariPred', 'MutPred2', 'PolyPhen2', 'PHACTboost')
+external_predictors <- c('CADD', 'ESM1b', 'AlphaMissense', 'VariPred', 'MutPred2', 'PolyPhen2', 'PHACT', 'PHACTboost')
 
-models_all_methods_multipleruns <- training_models_multipleruns(dt_preprocessed, models = models, model_output = 'models_all_methods_multipleruns')
-models_all_methods_multipleruns_optimized <- optimizing_hyperparameters(model_input = models_all_methods_multipleruns, model_output = 'models_all_methods_multipleruns')
-models_all_methods_multipleruns_performances <- model_performance_calculation(optimized_models = models_all_methods_multipleruns_optimized, 
+preTuned_dt <- readRDS('resources/fineTuningParams_best.rds')
+
+external_predictor_results <- fread('resources/external_predictions.txt', sep = '\t')
+variant_annotations <- external_predictor_results[, .(target_id, Class)]
+colnames(variant_annotations)[2] <- 'obs'
+
+
+predictions_all_models_multipleruns <- training_models_multipleruns(dt = TrioNsight_features_preprocessed_dt,
+                                                                    models = models,
+                                                                    preTuned = preTuned_dt,
+                                                                    variant_annotations = variant_annotations,
+                                                                    data_overlap = trainingSet_Overlaps, 
+                                                                    model_output = 'all_models_multipleruns')
+                                                                    
+performance_models_all_methods_multipleruns <- model_performance_calculation(predictions_models = predictions_all_models_multipleruns, 
                                                                               model_names = models,
                                                                               external_predictors = NULL, 
                                                                               external_predictor_results = NULL,
-                                                                              performance_output = 'models_all_methods_multipleruns')
+                                                                              data_overlap = NULL,
+                                                                              performance_output = 'all_models_multipleruns')
 
 ###############################################################
 
-split_variants_by_msa <- function(df, test_size = 0.2, seed = 42) {
-  # Set seed for reproducibility
-  set.seed(seed)
-  
-  # Calculate target counts for test set
-  total_pathogenic <- sum(df$Class == "Pathogenic")
-  total_benign <- sum(df$Class == "Benign")
-  target_test_pathogenic <- floor(total_pathogenic * test_size)
-  target_test_benign <- floor(total_benign * test_size)
-  
-  # Get MSA location info
-  msa_info <- df %>%
-    group_by(MSALocation) %>%
-    summarise(
-      pathogenic_count = sum(Class == "Pathogenic"),
-      benign_count = sum(Class == "Benign"),
-      total_count = n(),
-      .groups = "drop"
-    ) %>%
-    # Add random numbers for shuffling
-    mutate(random = runif(n()))
-  
-  # Initialize vectors for tracking
-  test_indices <- c()
-  train_indices <- c()
-  current_test_pathogenic <- 0
-  current_test_benign <- 0
-  
-  # Sort MSA locations randomly
-  msa_info <- arrange(msa_info, random)
-  
-  # Iterate through MSA locations and assign to train/test
-  for(i in 1:nrow(msa_info)) {
-    msa_loc <- msa_info$MSALocation[i]
-    path_count <- msa_info$pathogenic_count[i]
-    benign_count <- msa_info$benign_count[i]
-    
-    # Check if we can add to test while maintaining balance
-    can_add_to_test <- (
-      current_test_pathogenic < target_test_pathogenic &&
-        current_test_benign < target_test_benign &&
-        (current_test_pathogenic + path_count <= target_test_pathogenic) &&
-        (current_test_benign + benign_count <= target_test_benign)
-    )
-    
-    # Get indices for current MSA location
-    current_indices <- which(df$MSALocation == msa_loc)
-    
-    if(can_add_to_test) {
-      test_indices <- c(test_indices, current_indices)
-      current_test_pathogenic <- current_test_pathogenic + path_count
-      current_test_benign <- current_test_benign + benign_count
-    } else {
-      train_indices <- c(train_indices, current_indices)
-    }
-  }
-  
-  return(list(train = train_indices, test = test_indices))
-}
+## Train a TrioNsight model by splitting training data into test and train sets
+## This is a separate performance test from the previous one, which uses a leave-one-out cross-validation approach based on MSA locations.
 
-# Function to print split statistics
-print_split_stats <- function(df, split_indices) {
-  train_df <- df[split_indices$train, ]
-  test_df <- df[split_indices$test, ]
-  
-  cat("\nSplit Statistics:\n")
-  cat("Training set size:", nrow(train_df), "variants\n")
-  cat("Test set size:", nrow(test_df), "variants\n")
-  
-  cat("\nTraining set:\n")
-  print(table(train_df$Class))
-  
-  cat("\nTest set:\n")
-  print(table(test_df$Class))
-  
-  cat("\nUnique MSA locations:\n")
-  cat("Training:", length(unique(train_df$MSALocation)), "\n")
-  cat("Test:", length(unique(test_df$MSALocation)), "\n")
-}
+TrioNsight_features_dt <- fread('resources/TrioNsight_features_dataset.txt', sep = '\t')
+TrioNsight_features_dt$Class <- as.factor(TrioNsight_features_dt$Class)
 
-dt <- fread('resources/TrioNsight_features_dataset.txt', sep = '\t')
-dt$Class <- as.factor(dt$Class)
-# Perform the split
-split_indices <- split_variants_by_msa(dt, test_size = 0.2)
+# Split the variant dataset - ensure overlapping variants stay at the training set
+split_indices <- list()
 
-# Print statistics
-print_split_stats(dt, split_indices)
+nonoverlapping_indices <- which(!TrioNsight_features_dt$target_id %in% trainingSet_Overlaps$TrioNsight)
+test_dt <- TrioNsight_features_dt[nonoverlapping_indices,]
+test_dt <- unique(test_dt[,.(target_id, Class)])
+test_dt <- test_dt[, .SD[sample(.N, min(7, .N))], by = Class]
 
-dt[, Inherited_Seq := NULL]
-dt[, MSALocation := NULL]
+TrioNsight_features_dt[, Inherited_Seq := NULL]
+TrioNsight_features_dt[, MSALocation := NULL]
 
 # You can access the split datasets like this:
-train_dt <- dt[split_indices$train, ]
-test_dt <- dt[split_indices$test, ]
+train_dt <- TrioNsight_features_dt[!target_id %in% test_dt$target_id, ]
+test_dt <- TrioNsight_features_dt[target_id %in% test_dt$target_id, ]
 
 train_dt_preprocessed <- preprocess_training_data(train_dt)
 test_dt_preprocessed <- preprocess_training_data(test_dt)
@@ -605,93 +686,241 @@ random_split_model <- train(
   verbose = TRUE
 )
 
-saveRDS(random_split_model, file = 'predictor/random_split_model_optimized.rds')
-split_model_performance <- predict(random_split_model, newdata = test_dt_preprocessed, type = "prob")
-split_model_performance <- as.data.table(split_model_performance)
-split_model_performance[, target_id := test_target_ids]
+predictions_random_split_model <- predict(random_split_model, newdata = test_dt_preprocessed, type = "prob")
+predictions_random_split_model <- as.data.table(predictions_random_split_model)
+predictions_random_split_model[, target_id := test_target_ids]
 
-split_model_performance <- aggregate(split_model_performance, by = list(split_model_performance$target_id), mean)
-split_model_performance <- as.data.table(split_model_performance)
-split_model_performance[, target_id := NULL]
-colnames(split_model_performance)[1] <- 'target_id'
+predictions_random_split_model <- aggregate(predictions_random_split_model, by = list(predictions_random_split_model$target_id), mean)
+predictions_random_split_model <- as.data.table(predictions_random_split_model)
+predictions_random_split_model[, target_id := NULL]
+colnames(predictions_random_split_model)[1] <- 'target_id'
 
-split_model_performance[, Prediction := ifelse(Pathogenic > Benign, "Pathogenic", "Benign")]
+predictions_random_split_model[, Prediction := ifelse(Pathogenic > Benign, "Pathogenic", "Benign")]
 
-observed <- unique(dt[target_id %in% split_model_performance$target_id][,.(target_id, Class)])
-random_split_model_performance <- merge(split_model_performance, observed, by = 'target_id')
-saveRDS(random_split_model_performance, file = 'predictor/random_split_model_performance.rds')
+observed <- unique(TrioNsight_features_dt[target_id %in% predictions_random_split_model$target_id][,.(target_id, Class)])
+predictions_random_split_model <- merge(predictions_random_split_model, observed, by = 'target_id')
+colnames(predictions_random_split_model)[4:5] <- c('pred', 'obs')
+predictions_random_split_model <- list(list(predictions_random_split_model))
+names(predictions_random_split_model) <- 'TrioNsight'
+names(predictions_random_split_model[[1]]) <- 'random_split_model'
 
-###############################################################
+saveRDS(predictions_random_split_model, file = 'predictor/predictions_random_split_model.rds')
 
-dt <- fread('resources/TrioNsight_features_dataset.txt', sep = '\t')
-dt_preprocessed <- preprocess_training_data(dt)
+performance_random_split_model <- model_performance_calculation(predictions_models = predictions_random_split_model, 
+                                                                                           model_names = 'TrioNsight', 
+                                                                                           external_predictors = NULL, 
+                                                                                           external_predictor_results = NULL,
+                                                                                           data_overlap = NULL,
+                                                                                           performance_output = 'random_split_model')
 
-model_features <- setdiff(names(dt_preprocessed), c('target_id', 'MSALocation', 'Inherited_Seq'))
-dt_clean <- dt_preprocessed[, ..model_features]
-modelTrained <- train(Class ~ ., data = dt_clean,
-                      method = 'naive_bayes',
-                      preProc = c("center", "scale"),
-                      trControl = fitControl,
-                      allowParallel = TRUE,
-                      tuneLength = 5,  # Add tuning
-                      metric = "ROC",  # Change this if not a classification problem
-                      maximize = TRUE,  # TRUE if using accuracy or other metrics where higher is better
-                      verbose = TRUE)
+##################################################################
 
-TrioNsight_impactMap_features <- readRDS('resources//TrioNsight_impactMap_features.rds')
-TrioNsight_impactMap_features_cleaned <- preprocess_training_data(TrioNsight_impactMap_features)
+## Train TrioNsight on usual variant dataset and test on non-overlapping variant dataset
 
-TrioNsight_impactMap_predicted <- predict(modelTrained, newdata = TrioNsight_impactMap_features, type = "prob")
-TrioNsight_impactMap_predicted <- as.data.table(TrioNsight_impactMap_predicted)
-TrioNsight_impactMap_predicted[, target_id := TrioNsight_impactMap_features$target_id]
+train_all_methods_all_formulas_woDataOverlap <- function(dt, models, iterations, preTuned, variant_annotations, data_overlap, model_output){
+  
+  formula_list <- initialize_formulas(dt = dt)
+  # LOOCV based on MSALocation
+  unique_locs <- unique(dt$MSALocation)
+  
+  # First, ensure target_id is handled properly - convert to character instead of factor
+  dt$target_id <- factor(dt$target_id)
+  
+  # Initialize for storing predictions
+  trained_models <- list()
+  predictions_list <- list()
+  
+  ## dt[, rowIndex := NULL]
+  
+  for(model in models){
+    
+    for(i in 1:length(iterations)) {
+      if(i == 1){
+        formulaName <- 'Inclusive'
+      }
+      else if (i == 2){
+        formulaName <- 'NofoldX'
+      }
+      else if (i == 3){
+        formulaName <- 'NoVariantClusters'
+      }
+      else if (i == 4){
+        formulaName <- 'NoSAAPdap'
+      }
+      else if (i == 5){
+        formulaName <- 'NoStructuralFeatures'
+      }
+      else if (i == 6){
+        formulaName <- 'NovarSite'
+      }
+      else if (i == 7){
+        formulaName <- 'NoSequenceFeatures'
+      }
+      else if (i == 8){
+        formulaName <- 'NoAlphaMissense'
+      }
+      else if (i == 9){
+        formulaName <- 'NoVariPred'
+      }
+      else if (i == 10){
+        formulaName <- 'NoPHACT'
+      }
+      else if (i == 11){
+        formulaName <- 'NoPHACTboost'
+      }
+      else if (i == 12){
+        formulaName <- 'Exclusionary'
+      }
+      else if (i == 13){
+        formulaName <- 'CompPredictorsOnly'
+      }
+      
+      cat(paste('Model: ', model, ', Iteration: ', formulaName, sep = ''), '\n')
+      
+      formula <- as.formula("Class ~ . - target_id - MSALocation - Inherited_Seq")
+      
+      if(formulaName != 'Inclusive'){
+        if(formulaName == 'NoVariantClusters'){
+          formula <- as.formula(paste(deparse(formula), "-", formula_list$variant_clusters_names))
+        }
+        else if(formulaName == 'NoSAAPdap'){
+          formula <- as.formula(paste(deparse(formula), "-", formula_list$SAAPdap))
+        }
+        else if(formulaName == 'NoStructuralFeatures'){
+          formula <- as.formula(paste(deparse(formula), "-", formula_list$StructuralFeatures))
+        }
+        else if(formulaName == 'NoSequenceFeatures'){
+          formula <- as.formula(paste(deparse(formula), "-", formula_list$SequenceFeatures))
+        }
+        else if(formulaName == 'CompPredictorsOnly'){
+          formula <- as.formula(paste(deparse(formula), "-", formula_list$CompPredictorsOnly))
+        }
+        else{
+          formula <- as.formula(paste(deparse(formula), "-", iterations[i]))
+        }
+      }
+      cat(paste('The formula is:', Reduce(paste, deparse(formula)), sep = ' '), '\n')
+      
+      for (k in 1:length(unique_locs)) {
+        # Current MSA location for testing
+        current_loc <- unique_locs[k]
+        
+        # Training data: all except current MSA location
+        train_data <- dt[dt$MSALocation != current_loc, ]
+        
+        # Testing data: only non-overlapping variants from current MSA location
+        test_data <- dt[dt$MSALocation == current_loc & 
+                          !dt$target_id %in% data_overlap$TrioNsight, ]
+        
+        # Skip if no non-overlapping variants to test
+        if(nrow(test_data) == 0) next
+        
+        modelsWithLessParams <- c('knn', 'gbm', 'xgbTree', 'xgbLinear', 'glmboost', 'ranger', 'earth', 'rpart', 'bagFDA')
+        
+        preTuned_next <- preTuned_dt[[model]]
+        preTuned_next <- expand.grid(preTuned_next)
+        
+        if(model %in% modelsWithLessParams) {
+          modelTrained <- train(formula,
+                                data = train_data,
+                                method = model,
+                                preProc = c("center", "scale"),
+                                trControl = trainControl(method = "none", classProbs = TRUE),
+                                tuneGrid = preTuned_next,
+                                metric = "ROC",  # Change this if not a classification problem
+                                maximize = TRUE)  # TRUE if using accuracy or other metrics where higher is better
+        }
+        else {
+          modelTrained <- train(formula,
+                                data = train_data,
+                                method = model,
+                                preProc = c("center", "scale"),
+                                trControl = trainControl(method = "none", classProbs = TRUE),
+                                allowParallel = TRUE,
+                                tuneGrid = preTuned_next,
+                                metric = "ROC",  # Change this if not a classification problem
+                                maximize = TRUE,  # TRUE if using accuracy or other metrics where higher is better
+                                verbose = TRUE)
+        }
+        
+        # Make predictions on test data
+        predictions <- predict(modelTrained, newdata = test_data, type = "prob")
+        predictions <- cbind(test_data$target_id, predictions)
+        
+        # Store results
+        trained_models[[model]][[formulaName]][[current_loc]] <- modelTrained
+        predictions_list[[model]][[formulaName]][[current_loc]] <- predictions
+        
+      }
+      
+    }
+    
+  }
+  
+  predictions_parsed <- list()
+  models_parsed <- list()
+  for(i in 1:length(predictions_list)){
+    next_model <- predictions_list[[i]]
+    model_name <- names(predictions_list)[i]
+    for(j in 1:length(next_model)){
+      next_model_formula <- next_model[[j]]
+      formula_name <- names(next_model)[j]
+      
+      valid_indices <- which(!sapply(next_model_formula, is.null))
+      valid_predictions <- next_model_formula[valid_indices]
+      
+      results <- do.call(rbind, valid_predictions)
+      colnames(results)[1] <- 'target_id'
+      
+      final_results <- results %>%
+        group_by(target_id) %>%
+        summarise(
+          Benign = mean(Benign),
+          Pathogenic = mean(Pathogenic)
+        ) %>%
+        mutate(
+          pred = ifelse(Benign > Pathogenic, "Benign", "Pathogenic")
+        )
+      
+      final_results <- as.data.table(final_results)
+      final_results <- merge(final_results, variant_annotations[,.(target_id, obs)], by = 'target_id')
+      predictions_parsed[[model_name]][[formula_name]] <- final_results
+      models_parsed[[model_name]][[formula_name]] <- trained_models[[model_name]][[formula_name]][valid_indices]
+    }
+  }
+  
+  saveRDS(predictions_parsed, file = paste('predictor/predictions_', model_output, '.rds', sep = ''))
+  saveRDS(models_parsed, file = paste('predictor/models_', model_output, '.rds', sep = ''))
+  return(predictions_parsed)
+}
 
-# Calculate mean probabilities for each variant
-TrioNsight_impactMap_predicted <- TrioNsight_impactMap_predicted[, .(
-  mean_benign = mean(Benign),
-  mean_pathogenic = mean(Pathogenic),
-  sd_pathogenic = sd(Pathogenic)  # Standard deviation to check consistency
-), by = target_id]
+##########################################
 
-# Sort by pathogenic probability
-setorder(TrioNsight_impactMap_predicted, -mean_pathogenic)
+TrioNsight_features_dt <- fread('resources/TrioNsight_features_dataset.txt', sep = '\t')
+TrioNsight_features_preprocessed_dt <- preprocess_training_data(TrioNsight_features_dt)
+trainingSet_Overlaps <- readRDS('resources/trainingSet_Overlaps.rds')
+preTuned_dt <- readRDS('resources/fineTuningParams_best.rds')
 
-# Calculate some potential cutoffs
-cutoff_stats <- TrioNsight_impactMap_predicted[, .(
-  q90 = quantile(mean_pathogenic, 0.90),
-  q95 = quantile(mean_pathogenic, 0.95),
-  q99 = quantile(mean_pathogenic, 0.99)
-)]
+external_predictor_results <- fread('resources/external_predictions.txt', sep = '\t')
 
-# Look at variants with high disagreement between predictions
-inconsistent_preds <- TrioNsight_impactMap_predicted[sd_pathogenic > 0.2]
+external_predictor_results_Bool <- external_predictor_results[, .(target_id, Class, AlphaMissense_Class, VariPred_Class, CADD_Class, ESM1b_Class, MutPred2_Class, PolyPhen2_Class, PHACT_Class, PHACTboost_Class)]
+colnames(external_predictor_results_Bool) <- sapply(strsplit(colnames(external_predictor_results_Bool), '_', fixed = T), '[', 1)
+colnames(external_predictor_results_Bool)[1] <- 'target_id'
 
-# Create confidence levels
-TrioNsight_impactMap_predicted[, Prediction := case_when(
-  sd_pathogenic < 0.05 & mean_pathogenic > 0.75 ~ "Pathogenic",
-  sd_pathogenic >= 0.05 & mean_pathogenic > 0.75 ~ "Likely pathogenic",
-  sd_pathogenic < 0.05 & mean_pathogenic < 0.25 ~ "Benign",
-  sd_pathogenic >= 0.05 & mean_pathogenic < 0.25 ~ "Likely benign",
-  sd_pathogenic > 0.2 ~ "Uncertain",
-  TRUE ~ "Uncertain"
-)]
+variant_annotations <- external_predictor_results[, .(target_id, Class)]
+colnames(variant_annotations)[2] <- 'obs'
 
-TrioNsight_impactMap_predicted[, Accession := sapply(strsplit(target_id, '_', fixed = T), '[', 1)]
-TrioNsight_impactMap_predicted[, Residue := sapply(strsplit(target_id, '_', fixed = T), '[', 2)]
-TrioNsight_impactMap_predicted[, Residue := extractNumbersFromString(Residue)]
-TrioNsight_impactMap_predicted[, Mutant := sapply(strsplit(target_id, '_', fixed = T), '[', 2)]
-TrioNsight_impactMap_predicted[, Mutant := substrRight(TrioNsight_impactMap_predicted$Mutant, 1)]
+predictions_all_methods_all_formulas_woDataOverlap <- train_all_methods_all_formulas_woDataOverlap(dt = TrioNsight_features_preprocessed_dt, 
+                                                      models = models, 
+                                                      iterations = iterations,
+                                                      preTuned = preTuned_dt,
+                                                      variant_annotations = variant_annotations,
+                                                      data_overlap = trainingSet_Overlaps,
+                                                      model_output = 'TrioNsight')
 
-aa_codes_ordered <- as.data.table(names(aa_codes))
-aa_codes_ordered[, Order := 1:20]
-aa_codes_ordered[, Order := as.numeric(Order)]
-colnames(aa_codes_ordered)[1] <- 'Mutant'
-
-TrioNsight_impactMap_predicted <- merge(TrioNsight_impactMap_predicted, aa_codes_ordered, by = 'Mutant')
-TrioNsight_impactMap_predicted <- TrioNsight_impactMap_predicted[with(TrioNsight_impactMap_predicted, order(Accession, Residue, Order, decreasing = F))]
-
-TrioNsight_impactMap_predicted[, Order := NULL]
-TrioNsight_impactMap_predicted[, Residue := NULL]
-TrioNsight_impactMap_predicted[, Accession := NULL]
-TrioNsight_impactMap_predicted[, Mutant := NULL]
-
-fwrite(TrioNsight_impactMap_predicted, file = 'TrioNsight_all_predictions.txt', sep = '\t')
+performance_models_all_methods_all_formulas_woDataOverlap <- model_performance_calculation(predictions_models = predictions_all_methods_all_formulas_woDataOverlap, 
+                                                                              model_names = models, 
+                                                                              external_predictors = external_predictors, 
+                                                                              external_predictor_results = external_predictor_results_Bool,
+                                                                              data_overlap = trainingSet_Overlaps,
+                                                                              performance_output = 'all_models_all_methods')

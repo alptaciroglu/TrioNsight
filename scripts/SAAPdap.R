@@ -370,7 +370,7 @@ parse_SAAPdap_results <- function(use_existing_results, aa_codes, DHDomains2PDBs
   GlycinesNotOK <- ''
   ProlinesNotOK <- ''
   
-  for(i in 36:length(modelsFolders)){
+  for(i in 1:length(modelsFolders)){
     
     setwd(modelsFolders[i])
     

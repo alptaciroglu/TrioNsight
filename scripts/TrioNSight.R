@@ -14,9 +14,10 @@
 #' @import flextable
 #' @import magrittr
 #' 
-TrioNSight <- function(variantFile, alignmentFile, seqs2Inherit, InheritanceDetails2File = FALSE,
+TrioNSight <- function(variantFile, data_overlap, alignmentFile, seqs2Inherit, InheritanceDetails2File = FALSE,
                        BLOSUM_Matrix = 'BLOSUM80', ScoreConsFile, PrecalculatedScoreCons = TRUE,
-                       PrecalculatedVariPred = TRUE, VariPred_output_path, fullLengthSequences, 
+                       PrecalculatedVariPred = TRUE, dirVariPred, precalculated_varipred_path, VariPred_output_path, 
+                       fullLengthSequences, 
                        PrecalculatedSAAPdap = TRUE, SAAP3_path, 
                        PrecalculatedClusteringResults = FALSE, PrecalculatedClusters = TRUE) {
   
@@ -42,7 +43,7 @@ TrioNSight <- function(variantFile, alignmentFile, seqs2Inherit, InheritanceDeta
   
   
   variant_data_annotated <- varipred_main(use_existing_results = PrecalculatedVariPred, variant_data = variant_data_annotated, 
-                                          fullLengthSequences = fullLengthSequences, dirVariPred = 'VariPred/', 
+                                          fullLengthSequences = fullLengthSequences, dirVariPred = dirVariPred, 
                                           precalculated_varipred = precalculated_varipred_path)
   
   variant_data_annotated <- merge(variant_data_annotated, PHACT_TrioN_like[,.(target_id, PHACT_Score, PHACTboost_Score)], by = 'target_id')
@@ -61,7 +62,8 @@ TrioNSight <- function(variantFile, alignmentFile, seqs2Inherit, InheritanceDeta
                                                   aa_codes = aa_codes, reverse_aa_codes = reverse_aa_codes, 
                                                   strucclus_res_folderpath = 'strucclus_res/', 
                                                   distance_reference_pdb = 'TrioN_DHPH_1290_1594_A_1nty', best_n_reference = 'n5', 
-                                                  variant_data_annotated = variant_data_annotated)
+                                                  variant_data_annotated = variant_data_annotated,
+                                                  data_overlap = data_overlap)
   
   fwrite(variant_data_annotated, 'new_run/TrioNsight_features_dataset.txt', sep = '\t', quote = FALSE, row.names = FALSE)
   
@@ -71,13 +73,14 @@ TrioNSight <- function(variantFile, alignmentFile, seqs2Inherit, InheritanceDeta
 }
 
 
-TrioNsight_features <- TrioNSight(variantFile = 'resources/TrioNsight_variant_impact_map.txt',
+TrioNsight_features <- TrioNSight(variantFile = 'resources/TrioNsight_variant_dataset.txt',
                                   alignmentFile = 'resources/Human_DHs_mTMalign.fasta',
                                   seqs2Inherit = c("A1L390_80_293", "O15068_621_815", "O43307_94_309", "O60229_1273_1459", "O60229_1917_2119",
                                                    "O75962_1284_1470", "O75962_1958_2161", "P10911_488_679", "Q58EX7_724_924", "Q86YR7_615_823",
                                                    "Q96PX9_795_1000", "Q9H7P9_101_302", "Q9ULL1_91_312"),
                                   InheritanceDetails2File = FALSE,
                                   BLOSUM_Matrix = 'BLOSUM80', ScoreConsFile = 'resources/Human_DHs_mTMalign.scorecons', PrecalculatedScoreCons = TRUE, 
-                                  PrecalculatedVariPred = FALSE, precalculated_varipred_path = 'stable_run/varipred_output.txt', fullLengthSequences = 'resources/Human_DHs_prots_full_length.fasta',
-                                  PrecalculatedSAAPdap = FALSE, SAAP3_path = 'structure_analysis/SAAP3/',
-                                  PrecalculatedClusteringResults = FALSE, PrecalculatedClusters = TRUE)
+                                  PrecalculatedVariPred = TRUE, dirVariPred = 'varipred_files/', precalculated_varipred_path = 'stable_run/varipred_output.txt', 
+                                  fullLengthSequences = 'resources/Human_DHs_prots_full_length.fasta',
+                                  PrecalculatedSAAPdap = TRUE, SAAP3_path = 'structure_analysis/SAAP3/',
+                                  data_overlap = trainingSet_Overlaps, PrecalculatedClusteringResults = FALSE, PrecalculatedClusters = FALSE)
