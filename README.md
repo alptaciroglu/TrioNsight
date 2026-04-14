@@ -33,8 +33,8 @@
 
 * To reproduce the results, please continue with installing and running TrioNsight.
 
-![workflow](workflow.png)
-<p align="right">
+![workflow](workflow.jpeg)
+<p align="centre">
 <sub>(Preview)</sub>
 </p>
 
