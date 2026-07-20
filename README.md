@@ -9,6 +9,9 @@
     <a href="https://github.com/alptaciroglu/TrioNsight/issues">
     <img src="https://img.shields.io/github/issues-raw/alptaciroglu/TrioNsight.svg?style=flat-square&logo=github&logoColor=white"
          alt="GitHub issues">
+    <a href="https://doi.org/10.5281/zenodo.21457062">
+    <img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.21457062-blue.svg?style=flat-square"
+         alt="DOI">
 </p>
       
 <p align="center">
@@ -120,6 +123,10 @@ All of the data created for this work is under the main branch of this repositor
 The predictions generated with TrioNsight can be found in TrioNsight_all_predictions.txt file under the main repo. 
 
 ## ❛❛❞ Citing this work
+
+If you use TrioNsight, please cite the archived release:
+
+> Taciroğlu A. *TrioNsight: a specialised variant effect predictor for TrioN-like Dbl-homology domains.* Zenodo. https://doi.org/10.5281/zenodo.21457062
 
 ## 🤝 Acknowledgement
 
