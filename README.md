@@ -32,7 +32,7 @@
 
 * Data for all possible amino acid replacements are available - 50122 variant effect predictions from 13 TrioN-like DH domains (2638 residues in total).
 
-* Installing and running TrioNsight is <ins>not required</ins> to obtain the data for all possible amino acid replacements. It can be found in "TrioNsight_predictions.txt" file located under the main branch.
+* Installing and running TrioNsight is <ins>not required</ins> to obtain the data for all possible amino acid replacements. They are in [TrioNsight_all_predictions.txt](TrioNsight_all_predictions.txt) at the top level of this repository (the same data as Supplementary Table S3 of the paper).
 
 * To reproduce the results, please continue with installing and running TrioNsight.
 
@@ -105,7 +105,7 @@ source('scripts/helper.R')
 > [!IMPORTANT]
 > Running TrioNsight is not required to access the data for all possible amino acid replacements - 50122 variant effect predictions.
 > 
-> To access this data, please download "TrioNsight_predictions.txt" file located under the main branch.
+> To access this data, please download [TrioNsight_all_predictions.txt](TrioNsight_all_predictions.txt) from the top level of this repository.
 > 
 > To reproduce the results, please continue with running TrioNsight.
 
@@ -120,7 +120,12 @@ TrioNSight()
 
 All of the data created for this work is under the main branch of this repository.
 
-The predictions generated with TrioNsight can be found in TrioNsight_all_predictions.txt file under the main repo. 
+The predictions for all 50,122 possible amino acid replacements are in [TrioNsight_all_predictions.txt](TrioNsight_all_predictions.txt) (tab-separated; the same data as Supplementary Table S3 of the paper). Columns:
+
+* `target_id`: UniProt accession and amino acid replacement, e.g. `O75962_N1465S`
+* `Benign`, `Pathogenic`: mean predicted probabilities across the structural models of the TrioN-like DH domains
+* `sd`: standard deviation of the predicted probability across those models
+* `Prediction`: Benign, Likely benign, Uncertain, Likely pathogenic or Pathogenic (criteria in the paper's Methods)
 
 ## ❛❛❞ Citing this work
 
